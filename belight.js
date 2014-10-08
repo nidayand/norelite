@@ -3,6 +3,7 @@ module.exports = function(RED) {
     var mongo = require('mongodb');
     var MongoClient = mongo.MongoClient;
     
+
     /**
     Will set the status for a node.
     type:
@@ -11,19 +12,25 @@ module.exports = function(RED) {
         1 : green
     value : text to be displayed
     */
+     * Will set the status for a node.
+     * @param {Object} node  The node to set the status for
+     * @param {Number} type  -1/red, 0/yellow, 1/green
+     * @param {String} value The Text to be displayed
+     */
     var blsetStatus = function(node, type, value){
-        if(value!= null && value.length>15)
+        if (value !== null && value.length > 15){
             value=value.substr(0,15)+"...";
+        }
         switch(type){
                 case -1: node.status({fill:"red",shape:"ring",text: value});
                     break;
                 case 0: node.status({fill:"yellow",shape:"ring",text: value});
                     break;
                 case 1: node.status({fill:"green",shape:"dot",text: value});
-                    break;
+            break;
         }
     }
-    
+
     /**
     To set a kvp in Mongodb
     db : database connection
@@ -74,6 +81,13 @@ module.exports = function(RED) {
                     }
                 });          
     }
+    /**
+     * Publishes a message on the broker
+     * @param {Object} config Broker configuration
+     * @param {Object} client Client connection object
+     * @param {String} topic  The topic string starting with "/"
+     * @param {String} text   The
+     */
     var blMqttPub = function(config, client, topic,text){
         //var client = connectionPool.get(brokerConfig.broker,brokerConfig.port,brokerConfig.clientid,brokerConfig.username,brokerConfig.password);
         var msg = {};
