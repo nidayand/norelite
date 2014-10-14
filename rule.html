@@ -1,0 +1,85 @@
+<!-- *********************************************
+        DATASOURCE: rule in node
+
+
+
+     ********************************************* -->
+<script type="text/x-red" data-help-name="rule in">
+    <p>A datasource definition node. Will store the current value of the datasource</p>
+    <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
+    <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Belight nodes. When defining enter a prepend string to be used to uniquely identify Belight messages</p>
+    <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
+</script>
+<script type="text/x-red" data-template-name="rule in">
+    <div class="form-row">
+        <label for="node-input-bldb"><i class="fa fa-bookmark"></i> Store</label>
+        <input type="text" id="node-input-bldb">
+    </div>
+    <div class="form-row">
+        <label for="node-input-blbroker"><i class="fa fa-bookmark"></i> Broadcast broker</label>
+        <input type="text" id="node-input-blbroker">
+    </div>
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-expire" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-expire" style="width: 70%;">Value can expire</label>
+    </div>
+    <div id="expire-details">
+        <div class="form-row">
+            <label for="node-input-timeout"><i class="fa fa-clock-o"></i> For</label>
+            <input type="text" id="node-input-timeout" placeholder="Time" style="direction:rtl; width:50px !important">
+            <select id="node-input-timeoutUnits" style="width:200px !important">
+              <option value="milliseconds">Milliseconds</option>
+              <option value="seconds">Seconds</option>
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days">Days</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-expval"><i class="fa fa-bookmark"></i> Expiration value</label>
+            <input type="text" id="node-input-expval">
+        </div>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+</script>
+<script type="text/javascript">
+    function oneditprepareDatasource() {
+        $("#node-input-expire").change(function () {
+            if ($("#node-input-expire").is(':checked')){
+                $("#expire-details").show();
+            } else {
+                $("#expire-details").hide();
+            }
+        });
+
+    }
+    RED.nodes.registerType('rule in', {
+        category: 'belight-input',
+        color: "#D7D7A0",
+        defaults: {
+            bldb: {type: "bldb", required: true},
+            name: {value: "", required: true},
+            blbroker: {type: "blbroker", required: true},
+            expire: {value: false, required: true},
+            timeout: {value: 100, required: false, validate: RED.validators.number()},
+            timeoutUnits: {value: "seconds", required: false},
+            expval : {value: false, required: false}
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "rule.png",
+        align: "right",
+        label: function() {
+            return "Rule: "+this.name;
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : "";
+        },
+        oneditprepare: oneditprepareDatasource
+    });
+</script>
