@@ -16,7 +16,7 @@ module.exports = function (RED) {
         this.mqttConfig = RED.nodes.getNode(this.blbroker);
         this.mqttPre = "/ds/";
         this.expire = n.expire;
-        //timeout 
+        //timeout
         if (n.timeoutUnits == "milliseconds") {
             this.exptimeout = n.timeout;
         } else if (n.timeoutUnits == "seconds") {

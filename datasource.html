@@ -1,5 +1,5 @@
 <!-- *********************************************
-        DATASOURCE: output node 
+        DATASOURCE: output node
 
 Expval: value to be set when the inbound value has expired
 Broker: The MQTT broker to be used for broadcasting updated to related components
@@ -43,12 +43,12 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
             <label for="node-input-expval"><i class="fa fa-bookmark"></i> Expiration value</label>
             <input type="text" id="node-input-expval">
         </div>
-    </div>   
+    </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-    
+
 </script>
 <script type="text/javascript">
     function oneditprepareDatasource() {
@@ -59,7 +59,7 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
                 $("#expire-details").hide();
             }
         });
-            
+
     }
     RED.nodes.registerType('datasource out', {
         category: 'belight-output',
