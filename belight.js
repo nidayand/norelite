@@ -2,31 +2,27 @@ module.exports = function(RED) {
     "use strict";
     var mongo = require('mongodb');
     var MongoClient = mongo.MongoClient;
-    
+
 
     /**
-    Will set the status for a node.
-    type:
-        -1 : red
-        0 : yellow
-        1 : green
-    value : text to be displayed
-    */
      * Will set the status for a node.
      * @param {Object} node  The node to set the status for
      * @param {Number} type  -1/red, 0/yellow, 1/green
      * @param {String} value The Text to be displayed
      */
-    var blsetStatus = function(node, type, value){
-        if (value !== null && value.length > 15){
-            value=value.substr(0,15)+"...";
+    var blsetStatus = function (node, type, value) {
+        if (value !== null && value.length > 15) {
+            value = value.substr(0, 15) + "...";
         }
-        switch(type){
-                case -1: node.status({fill:"red",shape:"ring",text: value});
-                    break;
-                case 0: node.status({fill:"yellow",shape:"ring",text: value});
-                    break;
-                case 1: node.status({fill:"green",shape:"dot",text: value});
+        switch (type) {
+            case -1:
+                node.status({fill :"red",shape : "ring",text : value});
+                break;
+            case 0:
+                node.status({fill : "yellow", shape : "ring", text : value});
+                break;
+            case 1:
+                node.status({fill : "green", shape : "dot", text : value});
             break;
         }
     }
