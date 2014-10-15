@@ -1,4 +1,26 @@
 <!--
+Configuration node datasources
+-->
+<script type="text/x-red" data-template-name="blds">
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> ID</label>
+        <input type="text" id="node-config-input-dsid">
+    </div>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('blds',{
+        category: 'config',
+        defaults: {
+            dsid: {value:"",required:true}
+        },
+        label: function() {
+            return this.dsid;
+        }
+    });
+</script>
+
+<!--
 Configuration node for mqtt to broadcast events
 -->
 <script type="text/x-red" data-template-name="blbroker">

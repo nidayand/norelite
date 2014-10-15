@@ -1,5 +1,14 @@
+/*jslint node: true */
 module.exports = function (RED) {
     "use strict";
+    /*
+        Set the configuration node for DS
+    */
+    function DsConfigNode(n) {
+        RED.nodes.createNode(this, n);
+        this.dsid = n.dsid;
+    }
+    RED.nodes.registerType("blds", DsConfigNode);
 
     /*
         Set the configuration node for MQTT

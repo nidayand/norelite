@@ -1,9 +1,10 @@
+/*jslint node: true */
 module.exports = function (RED) {
     "use strict";
-    var blcommon = require('./lib/blcommon');
-    var connectionPool = require('./lib/mqttConnectionPool');
-    var mongo = require('mongodb');
-    var MongoClient = mongo.MongoClient;
+    var blcommon = require('./lib/blcommon'),
+        connectionPool = require('./lib/mqttConnectionPool'),
+        mongo = require('mongodb'),
+        MongoClient = mongo.MongoClient;
 
     /*
         Defines the output node for a rule. Copied to a large extent from 66-mongodb.js
@@ -16,16 +17,19 @@ module.exports = function (RED) {
         this.mqttConfig = RED.nodes.getNode(this.blbroker);
         this.mqttPre = "/ds/";
         this.expire = n.expire;
+        this.blds = n.blds;
+        this.dsid = RED.nodes.getNode(this.blds).dsid;
+        this.name = n.name;
         //timeout
-        if (n.timeoutUnits == "milliseconds") {
+        if (n.timeoutUnits === "milliseconds") {
             this.exptimeout = n.timeout;
-        } else if (n.timeoutUnits == "seconds") {
+        } else if (n.timeoutUnits === "seconds") {
             this.exptimeout = n.timeout * 1000;
-        } else if (n.timeoutUnits == "minutes") {
+        } else if (n.timeoutUnits === "minutes") {
             this.exptimeout = n.timeout * 1000 * 60;
-        } else if (n.timeoutUnits == "hours") {
+        } else if (n.timeoutUnits === "hours") {
             this.exptimeout = n.timeout * 1000 * 60 * 60;
-        } else if (n.timeoutUnits == "days") {
+        } else if (n.timeoutUnits === "days") {
             this.exptimeout = n.timeout * 1000 * 60 * 60 * 24;
         }
         this.expval = n.expval;
@@ -58,9 +62,10 @@ module.exports = function (RED) {
                     });
                 } else {
                     /* Initiate by retreiving what is in the db */
-                    blcommon.getKvp(db, "datasource", node.name, function (val, err) {
-                        if (!err)
-                            blcommon.setStatus(node, 0, val)
+                    blcommon.getKvp(db, "datasource", node.dsid, function (val, err) {
+                        if (!err) {
+                            blcommon.setStatus(node, 0, val);
+                        }
                     });
 
 
@@ -71,11 +76,12 @@ module.exports = function (RED) {
                         */
                         if (node.expire) {
                             //Clear the prev expiration
-                            if (node.exptimer)
+                            if (node.exptimer) {
                                 clearTimeout(node.exptimer);
+                            }
                             //Set a new timer
                             node.exptimer = setTimeout(function () {
-                                blcommon.setKvp(db, "datasource", node.name, node.expval, function (val, err) {
+                                blcommon.setKvp(db, "datasource", node.dsid, node.expval, function (val, err) {
                                     if (!err) {
                                         blcommon.setStatus(node, -1, val);
                                         blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.name, val);
@@ -84,7 +90,7 @@ module.exports = function (RED) {
                             }, node.exptimeout);
                         }
 
-                        blcommon.setKvp(db, "datasource", node.name, msg.payload, function (val, err) {
+                        blcommon.setKvp(db, "datasource", node.dsid, msg.payload, function (val, err) {
                             if (!err) {
                                 blcommon.setStatus(node, 1, val);
                                 blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.name, val);
@@ -108,4 +114,4 @@ module.exports = function (RED) {
         });
     }
     RED.nodes.registerType("datasource out", DataSourceOutNode);
-}
+};
