@@ -4,9 +4,9 @@ module.exports = function (RED) {
     /*
         Set the configuration node for DS
     */
-    function DsConfigNode(n) {
-        RED.nodes.createNode(this, n);
-        this.dsid = n.dsid;
+    function DsConfigNode(config) {
+        RED.nodes.createNode(this, config);
+        this.dsid = config.dsid;
     }
     RED.nodes.registerType("blds", DsConfigNode);
 
