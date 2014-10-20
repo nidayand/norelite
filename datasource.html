@@ -48,10 +48,6 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
         <label for="node-input-blds"><i class="fa fa-bookmark"></i> ID</label>
         <input type="text" id="node-input-blds">
     </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-user"></i> Name</label>
-        <input type="text" id="node-input-name">
-    </div>
 
 </script>
 <script type="text/javascript">
@@ -75,18 +71,19 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
             expire: {value: false, required: true},
             timeout: {value: 100, required: false, validate: RED.validators.number()},
             timeoutUnits: {value: "seconds", required: false},
-            expval : {value: false, required: false},
-            name : {value : ""}
+            expval : {value: false, required: false}
         },
         inputs: 1,
         outputs: 0,
         icon: "datasource.png",
         align: "right",
         label: function() {
-            return "Datasource: "+this.name;
+            var bldsNode = RED.nodes.node(this.blds);
+            return "Datasource: " + (bldsNode ? bldsNode.label() : "undefined");
         },
         labelStyle: function() {
-            return this.name ? "node_label_italic" : "";
+            var bldsNode = RED.nodes.node(this.blds);
+            return (bldsNode ? "node_label_italic" : "");
         },
         oneditprepare: oneditprepareDatasource
     });

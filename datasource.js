@@ -19,7 +19,7 @@ module.exports = function (RED) {
         this.expire = n.expire;
         this.blds = n.blds;
         this.dsid = RED.nodes.getNode(this.blds).dsid;
-        this.name = n.name;
+
         //timeout
         if (n.timeoutUnits === "milliseconds") {
             this.exptimeout = n.timeout;
@@ -84,7 +84,7 @@ module.exports = function (RED) {
                                 blcommon.setKvp(db, "datasource", node.dsid, node.expval, function (val, err) {
                                     if (!err) {
                                         blcommon.setStatus(node, -1, val);
-                                        blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.name, val);
+                                        blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.dsid, val);
                                     }
                                 });
                             }, node.exptimeout);
@@ -93,7 +93,7 @@ module.exports = function (RED) {
                         blcommon.setKvp(db, "datasource", node.dsid, msg.payload, function (val, err) {
                             if (!err) {
                                 blcommon.setStatus(node, 1, val);
-                                blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.name, val);
+                                blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.dsid, val);
                             }
                         });
 
