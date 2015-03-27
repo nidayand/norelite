@@ -8,7 +8,7 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
 
      ********************************************* -->
 <script type="text/x-red" data-help-name="source out">
-    <p>A datasource definition node. Will store the current value of the datasource</p>
+    <p>A source definition node. Will store the current value of the datasource</p>
     <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
     <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Belight nodes. When defining enter a prepend string to be used to uniquely identify Belight messages</p>
     <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
