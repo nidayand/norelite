@@ -5,10 +5,7 @@
 
      ********************************************* -->
 <script type="text/x-red" data-help-name="rule in">
-    <p>A datasource definition node. Will store the current value of the datasource</p>
-    <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
-    <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Belight nodes. When defining enter a prepend string to be used to uniquely identify Belight messages</p>
-    <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
+    <p>Bla bla bla</p>
 </script>
 <script type="text/x-red" data-template-name="rule in">
     <div class="form-row">
@@ -19,42 +16,65 @@
         <label for="node-input-blbroker"><i class="fa fa-bookmark"></i> Broadcast broker</label>
         <input type="text" id="node-input-blbroker">
     </div>
-    <div class="form-row">
-        <label>&nbsp;</label>
-        <input type="checkbox" id="node-input-expire" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
-        <label for="node-input-expire" style="width: 70%;">Value can expire</label>
+    <div class="form-row" style="padding-top:10px;">
+        <i class="fa fa-bookmark"></i> Rules</label>
     </div>
-    <div id="expire-details">
-        <div class="form-row">
-            <label for="node-input-timeout"><i class="fa fa-clock-o"></i> For</label>
-            <input type="text" id="node-input-timeout" placeholder="Time" style="direction:rtl; width:50px !important">
-            <select id="node-input-timeoutUnits" style="width:200px !important">
-              <option value="milliseconds">Milliseconds</option>
-              <option value="seconds">Seconds</option>
-              <option value="minutes">Minutes</option>
-              <option value="hours">Hours</option>
-              <option value="days">Days</option>
-            </select>
+    <div class="form-row">
+        <div id="node-input-rule-container-div" style="border-radius: 5px; height: 310px; padding: 5px; border: 1px solid #ccc; overflow-y:scroll;">
+        <ol id="node-input-rule-container" style=" list-style-type:none; margin: 0;">
+        </ol>
         </div>
-        <div class="form-row">
-            <label for="node-input-expval"><i class="fa fa-bookmark"></i> Expiration value</label>
-            <input type="text" id="node-input-expval">
-        </div>
+        <a href="#" class="btn btn-mini" id="node-input-add-rule" style="margin-top: 4px;"><i class="fa fa-plus"></i> Add</a>
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
-
 </script>
+
 <script type="text/javascript">
-    function oneditprepareDatasource() {
-        $("#node-input-expire").change(function () {
-            if ($("#node-input-expire").is(':checked')){
-                $("#expire-details").show();
-            } else {
-                $("#expire-details").hide();
+    function oneditprepare() {
+        var operators = [
+                {v:"eq",t:"=="},
+                {v:"neq",t:"!="},
+                {v:"lt",t:"<"},
+                {v:"lte",t:"<="},
+                {v:"gt",t:">"},
+                {v:"gte",t:">="},
+                {v:"btwn",t:"is between"},
+                {v:"cont",t:"contains"},
+                {v:"regex",t:"matches regex"},
+                {v:"true",t:"is true"},
+                {v:"false",t:"is false"},
+                {v:"null",t:"is null"},
+                {v:"nnull",t:"is not null"},
+                {v:"else",t:"otherwise"}
+            ],
+        generateRule = function(i, rule){
+        }
+
+        //HOW TO GET THE CONFIG NODES - TODO
+        RED.nodes.eachConfig(function(node){console.log(node)})
+
+        // Manage the add new rule button
+        $("#node-input-add-rule").click(function() {
+                generateRule($("#node-input-rule-container").children().length+1,{t:"",v:"",v2:""});
+                $("#node-input-rule-container-div").scrollTop($("#node-input-rule-container-div").get(0).scrollHeight);
+        });
+
+        //Manage resizing of the dialog
+        function switchDialogResize(ev,ui) {
+                $("#node-input-rule-container-div").css("height",(ui.size.height-260)+"px");
+        };
+        $( "#dialog" ).on("dialogresize", switchDialogResize);
+        $( "#dialog" ).one("dialogopen", function(ev) {
+            var size = $( "#dialog" ).dialog('option','sizeCache-switch');
+            if (size) {
+                switchDialogResize(null,{size:size});
             }
+        });
+        $( "#dialog" ).one("dialogclose", function(ev,ui) {
+            $( "#dialog" ).off("dialogresize",switchDialogResize);
         });
 
     }
@@ -65,10 +85,7 @@
             bldb: {type: "bldb", required: true},
             name: {value: "", required: true},
             blbroker: {type: "blbroker", required: true},
-            expire: {value: false, required: true},
-            timeout: {value: 100, required: false, validate: RED.validators.number()},
-            timeoutUnits: {value: "seconds", required: false},
-            expval : {value: false, required: false}
+            rules: {value: [{t:"eq", v:""}]}
         },
         inputs: 0,
         outputs: 1,
@@ -80,6 +97,6 @@
         labelStyle: function() {
             return this.name ? "node_label_italic" : "";
         },
-        oneditprepare: oneditprepareDatasource
+        oneditprepare: oneditprepare
     });
 </script>

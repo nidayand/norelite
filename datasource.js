@@ -67,7 +67,7 @@ module.exports = function (RED) {
                             blcommon.setStatus(node, 0, val);
                         }
                     });
-
+//console.log(node);
 
                     /* When a message is received */
                     node.on("input", function (msg) {
