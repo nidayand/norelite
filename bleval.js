@@ -1,5 +1,9 @@
 module.exports = function(RED) {
     "use strict";
+    var blcommon = require('./lib/blcommon'),
+        connectionPool = require('./lib/mqttConnectionPool'),
+        mongo = require('mongodb'),
+        MongoClient = mongo.MongoClient;
     var operators = {
         'eq': function(a, b) { return a == b; },
         'neq': function(a, b) { return a != b; },
@@ -19,6 +23,11 @@ module.exports = function(RED) {
 
     function blevalNode(n) {
         RED.nodes.createNode(this, n);
+        this.bldb = n.bldb;
+        this.dbConfig = RED.nodes.getNode(this.bldb);
+        this.blbroker = n.blbroker;
+        this.mqttConfig = RED.nodes.getNode(this.blbroker);
+        this.mqttPre = "/source/";
         this.rules = n.rules;
         this.property = n.property;
         this.checkall = n.checkall || "true";

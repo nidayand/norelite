@@ -7,6 +7,7 @@ module.exports = function (RED) {
     function DsConfigNode(config) {
         RED.nodes.createNode(this, config);
         this.dsid = config.dsid;
+        this.name = config.name;
     }
     RED.nodes.registerType("bl-source", DsConfigNode);
 

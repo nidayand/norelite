@@ -4,8 +4,12 @@
 
 <script type="text/x-red" data-template-name="eval in">
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
+        <label for="node-input-bldb"><i class="fa fa-bookmark"></i> Store</label>
+        <input type="text" id="node-input-bldb">
+    </div>
+    <div class="form-row">
+        <label for="node-input-blbroker"><i class="fa fa-bookmark"></i> Broadcast broker</label>
+        <input type="text" id="node-input-blbroker">
     </div>
     <div class="form-row">
         If msg.<input type="text" id="node-input-property" style="width: 200px;"/>
@@ -24,6 +28,10 @@
             <option value="false">stopping after first match</option>
         </select>
     </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
 </script>
 
 <script type="text/javascript">
@@ -31,6 +39,8 @@
         color: "#E2D96E",
         category: 'belight-input',
         defaults: {
+            bldb: {type: "bl-store", required: true},
+            blbroker: {type: "bl-broker", required: true},
             name: {value:""},
             property: {value:"payload", required:true},
             rules: {value:[{t:"eq", v:""}]},
