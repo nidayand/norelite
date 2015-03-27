@@ -1,7 +1,7 @@
 <!--
 Configuration node datasources
 -->
-<script type="text/x-red" data-template-name="blds">
+<script type="text/x-red" data-template-name="bl-source">
     <div class="form-row">
         <label for="node-config-input-dsid"><i class="fa fa-tag"></i> ID</label>
         <input class="input-append-left" type="text" id="node-config-input-dsid">
@@ -9,7 +9,7 @@ Configuration node datasources
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('blds',{
+    RED.nodes.registerType('bl-source',{
         category: 'config',
         color: "rgb(218, 196, 180)",
         defaults: {
@@ -24,7 +24,7 @@ Configuration node datasources
 <!--
 Configuration node for mqtt to broadcast events
 -->
-<script type="text/x-red" data-template-name="blbroker">
+<script type="text/x-red" data-template-name="bl-broker">
     <div class="form-row node-input-broker">
         <label for="node-config-input-broker"><i class="fa fa-globe"></i> Broker</label>
         <input class="input-append-left" type="text" id="node-config-input-broker" placeholder="localhost" style="width: 40%;" >
@@ -50,7 +50,7 @@ Configuration node for mqtt to broadcast events
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('blbroker',{
+    RED.nodes.registerType('bl-broker',{
         category: 'config',
         defaults: {
             broker: {value:"",required:true},
@@ -72,7 +72,7 @@ Configuration node for mqtt to broadcast events
 <!--
 Configuration node for the database
 -->
-<script type="text/x-red" data-template-name="bldb">
+<script type="text/x-red" data-template-name="bl-store">
     <div class="form-row">
         <label for="node-config-input-hostname"><i class="fa fa-bookmark"></i> Host</label>
         <input class="input-append-left" type="text" id="node-config-input-hostname" placeholder="localhost" style="width: 40%;" >
@@ -97,7 +97,7 @@ Configuration node for the database
     </div>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('bldb', {
+    RED.nodes.registerType('bl-store', {
         category: 'config',
         color: "rgb(218, 196, 180)",
         defaults: {

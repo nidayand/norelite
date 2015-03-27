@@ -8,7 +8,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, config);
         this.dsid = config.dsid;
     }
-    RED.nodes.registerType("blds", DsConfigNode);
+    RED.nodes.registerType("bl-source", DsConfigNode);
 
     /*
         Set the configuration node for MQTT
@@ -25,7 +25,7 @@ module.exports = function (RED) {
             this.password = this.credentials.password;
         }
     }
-    RED.nodes.registerType("blbroker", MQTTBrokerNode, {
+    RED.nodes.registerType("bl-broker", MQTTBrokerNode, {
         credentials: {
             user: {
                 type: "text"
@@ -56,7 +56,7 @@ module.exports = function (RED) {
         this.url = url;
     }
 
-    RED.nodes.registerType("bldb", BelightNode, {
+    RED.nodes.registerType("bl-store", BelightNode, {
         credentials: {
             user: {
                 type: "text"

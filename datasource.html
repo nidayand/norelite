@@ -65,9 +65,9 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
         category: 'belight-output',
         color: "#FFCC66",
         defaults: {
-            bldb: {type: "bldb", required: true},
-            blds: {type: "blds", required: true},
-            blbroker: {type: "blbroker", required: true},
+            bldb: {type: "bl-store", required: true},
+            blds: {type: "bl-source", required: true},
+            blbroker: {type: "bl-broker", required: true},
             expire: {value: false, required: true},
             timeout: {value: 100, required: false, validate: RED.validators.number()},
             timeoutUnits: {value: "seconds", required: false},
@@ -79,7 +79,7 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
         align: "right",
         label: function() {
             var bldsNode = RED.nodes.node(this.blds);
-            return "Datasource: " + (bldsNode ? bldsNode.label() : "undefined");
+            return "Source: " + (bldsNode ? bldsNode.label() : "undefined");
         },
         labelStyle: function() {
             var bldsNode = RED.nodes.node(this.blds);
