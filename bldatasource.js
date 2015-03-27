@@ -9,7 +9,7 @@ module.exports = function (RED) {
     /*
         Defines the output node for a rule. Copied to a large extent from 66-mongodb.js
     */
-    function DataSourceOutNode(n) {
+    function SourceOutNode(n) {
         RED.nodes.createNode(this, n);
         this.bldb = n.bldb;
         this.dbConfig = RED.nodes.getNode(this.bldb);
@@ -113,5 +113,5 @@ module.exports = function (RED) {
             }
         });
     }
-    RED.nodes.registerType("datasource out", DataSourceOutNode);
+    RED.nodes.registerType("source out", SourceOutNode);
 };
