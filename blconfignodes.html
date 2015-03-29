@@ -1,49 +1,7 @@
 <!--
 Configuration node datasources
 -->
-<script type="text/x-red" data-template-name="bl-source">
-    <div class="form-row" style="display:none">
-        <label for="node-config-input-dsid"><i class="fa fa-tag"></i> ID</label>
-        <input class="input-append-left" type="text" id="node-config-input-dsid">
-    </div>
-    <div class="form-row">
-        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input class="input-append-left" type="text" id="node-config-input-name">
-    </div>
-</script>
 
-<script type="text/javascript">
-    var oneditsave = function () {
-        var node = this;
-        //Generate a unique value if it is missing one
-        if ($("#node-config-input-dsid").val() == "") {
-            this.dsid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0,
-                    v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-        }
-        alert($("#node-config-input-dsid").val());
-    }
-    RED.nodes.registerType('bl-source', {
-        category: 'config',
-        color: "rgb(218, 196, 180)",
-        defaults: {
-            dsid: {
-                value: "",
-                required: false
-            },
-            name: {
-                value: "",
-                required: true
-            }
-        },
-        label: function () {
-            return this.name;
-        },
-        oneditsave: oneditsave
-    });
-</script>
 
 <!--
 Configuration node for mqtt to broadcast events
