@@ -45,8 +45,8 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
         </div>
     </div>
     <div class="form-row">
-        <label for="node-input-blds"><i class="fa fa-bookmark"></i> ID</label>
-        <input type="text" id="node-input-blds">
+        <label for="node-input-name"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
     </div>
 
 </script>
@@ -66,7 +66,7 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
         color: "#FFCC66",
         defaults: {
             bldb: {type: "bl-store", required: true},
-            blds: {type: "bl-source", required: true},
+            name: {value: "", required: true},
             blbroker: {type: "bl-broker", required: true},
             expire: {value: false, required: true},
             timeout: {value: 100, required: false, validate: RED.validators.number()},
@@ -78,12 +78,10 @@ Name: The data source name to be stored in MongoDB and used for consumers to say
         icon: "source.png",
         align: "right",
         label: function() {
-            var bldsNode = RED.nodes.node(this.blds);
-            return "Source: " + (bldsNode ? bldsNode.label() : "undefined");
+            return "Source: " + (this.name ? this.name : "undefined");
         },
         labelStyle: function() {
-            var bldsNode = RED.nodes.node(this.blds);
-            return (bldsNode ? "node_label_italic" : "");
+            return (this.name ? "node_label_italic" : "");
         },
         oneditprepare: oneditprepareDatasource
     });

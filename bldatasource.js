@@ -17,8 +17,7 @@ module.exports = function (RED) {
         this.mqttConfig = RED.nodes.getNode(this.blbroker);
         this.mqttPre = "/source/";
         this.expire = n.expire;
-        this.blds = n.blds;
-        this.dsid = RED.nodes.getNode(this.blds).dsid;
+        this.name = n.name;
 
         //timeout
         if (n.timeoutUnits === "milliseconds") {
@@ -62,7 +61,7 @@ module.exports = function (RED) {
                     });
                 } else {
                     /* Initiate by retreiving what is in the db */
-                    blcommon.getKvp(db, "source", node.dsid, function (val, err) {
+                    blcommon.getKvp(db, "source", node.id, function (val, err) {
                         if (!err) {
                             blcommon.setStatus(node, 0, val);
                         }
@@ -81,19 +80,19 @@ module.exports = function (RED) {
                             }
                             //Set a new timer
                             node.exptimer = setTimeout(function () {
-                                blcommon.setKvp(db, "source", node.dsid, node.expval, function (val, err) {
+                                blcommon.setKvp(db, "source", node.id, node.expval, function (val, err) {
                                     if (!err) {
                                         blcommon.setStatus(node, -1, val);
-                                        blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.dsid, val);
+                                        blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.id, val);
                                     }
                                 });
                             }, node.exptimeout);
                         }
 
-                        blcommon.setKvp(db, "source", node.dsid, msg.payload, function (val, err) {
+                        blcommon.setKvp(db, "source", node.id, msg.payload, function (val, err) {
                             if (!err) {
                                 blcommon.setStatus(node, 1, val);
-                                blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.dsid, val);
+                                blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.id, val);
                             }
                         });
 
