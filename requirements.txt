@@ -1,0 +1,27 @@
+Requirements
+-----
+switch
+    Håller status för en switch. Av eller på.
+    Ska kunna hantera regler men även scenarion
+    Ett scenario kan även bestämma att en switch inte ska vara på
+    
+    Design
+        tar värde 0-100 för att även hunna hantera dimmers
+        Om inget scenario är påslaget
+            Om någon regel säger att den ska vara på så är den på 0-100
+        Om ett scenario är påslaget
+            Kolla om den ska ta enligt regler eller av/på/0-100
+            
+datasource
+    Håller värdet på en källa som kan vara en input till en regel
+    
+        Design
+            tar emot inkommande värde och sparar
+            ska hantera att ett värde inte är längre aktivt efter en viss tid. Om det går ut så ska ett defaultvärde sättas
+            ska ha ett val om en utport där värdet skickas ut. Detta för om man vill t ex sätta en hysteres för värdet till en annan datakäll.
+                tickbox för att få upp en utport
+                denna kan även användas för att t ex spara värdet in i en time series db
+    
+    
+Scenario
+    Endast ett scenario kan vara aktivt
