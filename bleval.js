@@ -17,8 +17,7 @@ module.exports = function(RED) {
         'true': function(a) { return a === true; },
         'false': function(a) { return a === false; },
         'null': function(a) { return typeof a == "undefined"; },
-        'nnull': function(a) { return typeof a != "undefined"; },
-        'else': function(a) { return a === true; }
+        'nnull': function(a) { return typeof a != "undefined"; }
     };
 
     function blevalNode(n) {
@@ -29,11 +28,10 @@ module.exports = function(RED) {
         this.mqttConfig = RED.nodes.getNode(this.blbroker);
         this.mqttPre = "/source/";
         this.rules = n.rules;
-        this.property = n.property;
         this.checkall = n.checkall || "true";
-        var propertyParts = n.property.split(".");
         var node = this;
 
+        //Tidy up to ensure correct numbers in values
         for (var i=0; i<this.rules.length; i+=1) {
             var rule = this.rules[i];
             if (!isNaN(Number(rule.v))) {
@@ -42,30 +40,57 @@ module.exports = function(RED) {
             }
         }
 
-        this.on('input', function (msg) {
-            var onward = [];
-            try {
-                var prop = propertyParts.reduce(function (obj, i) {
-                    return obj[i]
-                }, msg);
-                var elseflag = true;
-                for (var i=0; i<node.rules.length; i+=1) {
-                    var rule = node.rules[i];
-                    var test = prop;
-                    if (rule.t == "else") { test = elseflag; elseflag = true; }
-                    if (operators[rule.t](test,rule.v, rule.v2)) {
-                        onward.push(msg);
-                        elseflag = false;
-                        if (node.checkall == "false") { break; }
-                    } else {
-                        onward.push(null);
+        //Connect to broker
+        if (this.mqttConfig) {
+            node.clientMqtt = connectionPool.get(node.mqttConfig.broker, node.mqttConfig.port, node.mqttConfig.clientid, node.mqttConfig.username, node.mqttConfig.password);
+            node.clientMqtt.on("connectionlost", function () {
+                node.error("mqtt disconnected");
+            });
+            node.clientMqtt.on("connect", function () {
+                node.log("mqtt connected");
+            });
+            node.clientMqtt.connect();
+        } else {
+            node.error("missing blbroker configuration");
+            blcommon.setStatus(node, -1, "Missing blbroker configuration");
+        }
+
+        if (this.dbConfig) {
+            //Connect to db
+            MongoClient.connect(this.dbConfig.url, function (err, db) {
+                node.clientDb = db;
+                if (err) {
+                    node.error(err);
+                    blcommon.setStatus(node, -1, "Store disconnected");
+                } else {
+                    //Connection to db successful
+                    blcommon.setStatus(node, 0, "Connected");
+
+                    //Add listeners to the MQTT-messages
+                    for (var i=0; i<node.rules.length; i+=1) {
+                        blcommon.MqttSub(node.mqttConfig, node.clientMqtt, node.mqttPre+node.rules[i].s, function(topic,payload,qos,retain){
+
+                            //Go through all sources and validate
+                            var res = [];
+                            for(var j=0; j<node.rules.length; j+=1){
+                                var id_t = node.rules[j].s;
+                                blcommon.getKvp(db,"source",id_t , function(val,err){
+                                    res.push({id:id_t, val:val, error: !err?false:true});
+                                    //Continue if all db info has been received
+                                    if(res.length==node.rules.length){
+                                        console.log("r: "+JSON.stringify(res));
+                                    }
+                                });
+                            }
+                        });
                     }
+
                 }
-                this.send(onward);
-            } catch(err) {
-                node.warn(err);
-            }
-        });
+            });
+        } else {
+            this.error("missing bldb configuration");
+        }
+
     }
     RED.nodes.registerType("eval in", blevalNode);
 }
