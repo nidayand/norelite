@@ -18,6 +18,7 @@ module.exports = function (RED) {
         this.mqttPre = "/source/";
         this.expire = n.expire;
         this.name = n.name;
+        this.output = n.output;
 
         //timeout
         if (n.timeoutUnits === "milliseconds") {
@@ -95,6 +96,11 @@ module.exports = function (RED) {
                                 blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.id, val);
                             }
                         });
+
+                        //If there is an output send the message
+                        if (node.output){
+                            node.send(msg);
+                        }
 
                     });
                 }
