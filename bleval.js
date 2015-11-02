@@ -92,5 +92,5 @@ module.exports = function(RED) {
         }
 
     }
-    RED.nodes.registerType("eval in", blevalNode);
+    RED.nodes.registerType("bl-eval in", blevalNode);
 }

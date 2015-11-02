@@ -1,8 +1,8 @@
-<script type="text/x-red" data-help-name="eval in">
+<script type="text/x-red" data-help-name="bl-eval in">
     <p>Triggers on changes in sources and evaluate sources according to criterias and either output true or false</p>
 </script>
 
-<script type="text/x-red" data-template-name="eval in">
+<script type="text/x-red" data-template-name="bl-eval in">
     <div class="form-row">
         <label for="node-input-bldb"><i class="fa fa-bookmark"></i> Store</label>
         <input type="text" id="node-input-bldb">
@@ -32,7 +32,7 @@
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('eval in', {
+    RED.nodes.registerType('bl-eval in', {
         color: "#E2D96E",
         category: 'belight-input',
         defaults: {
@@ -71,7 +71,7 @@
             //get all conf nodes
             var sourceAllList = [];
             RED.nodes.eachNode(function(cf){
-                if (cf.type==="source out"){
+                if (cf.type==="bl-source out"){
                     sourceAllList.push(cf);
                 }
             });
