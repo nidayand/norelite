@@ -87,6 +87,11 @@ module.exports = function (RED) {
                                         blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.id, val);
                                     }
                                 });
+                                //If output is enabled, send a new message with the expired value
+                                if (node.output) {
+                                    msg.payload = node.expval;
+                                    node.send(msg);
+                                }
                             }, node.exptimeout);
                         }
 
@@ -94,11 +99,12 @@ module.exports = function (RED) {
                             if (!err) {
                                 blcommon.setStatus(node, 1, val);
                                 blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.id, val);
+
                             }
                         });
 
                         //If there is an output send the message
-                        if (node.output){
+                        if (node.output) {
                             node.send(msg);
                         }
 
