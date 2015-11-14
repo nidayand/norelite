@@ -11,17 +11,30 @@ Set value
 <script type="text/x-red" data-template-name="bl-value-out">
     <div class="form-row">
         <label for="node-input-slider"><i class="fa fa-lightbulb-o"></i> Value</label>
-        <input type="text" id="node-input-slider" placeholder="Value" style="direction:rtl; width:50px !important">
+        <input type="text" id="node-input-slider" placeholder="Value" style="display:none" ><input type="text" id="slidertxt" readonly style=" width:50px"/>
+
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-bookmark"></i> Name</label>
-        <input type="text" id="node-input-name">
+        <div id="slider"></div>
     </div>
 </script>
 <script type="text/javascript">
     /* when opening the form */
     function oneditprepareDatasource() {
+        //Set value in txt
+        $("#slidertxt").val($("#node-input-slider").val()+"%");
 
+        //Create slider
+        $("#slider").slider({
+           value: $("#node-input-slider").val(),
+            min:0,
+            max:100,
+            step:5,
+            slide: function(event, ui){
+                $("#node-input-slider").val(ui.value);
+                $("#slidertxt").val(ui.value+"%");
+            }
+        });
     }
 
     /* when saving the form */
@@ -32,7 +45,6 @@ Set value
         category: 'belight-output',
         color: "#FFCC66",
         defaults: {
-            name: {value: "", required: true},
             slider: {value: 100, required:true, validate: RED.validators.number()}
         },
         inputs: 1,
@@ -40,7 +52,7 @@ Set value
         icon: "light.png",
         align: "right",
         label: function() {
-            return "Value: " + (this.name ? this.name : "undefined");
+            return "Value: Set to " + this.slider + "%";
         },
         labelStyle: function() {
             return (this.name ? "node_label_italic" : "");
