@@ -4,12 +4,12 @@
      ********************************************* -->
 
 <!-- Description -->
-<script type="text/x-red" data-help-name="t_name out">
+<script type="text/x-red" data-help-name="t_name-out">
     <p></p>
 </script>
 
 <!-- HTML -->
-<script type="text/x-red" data-template-name="t_name out">
+<script type="text/x-red" data-template-name="t_name-out">
     <div class="form-row">
         <label for="node-input-bldb"><i class="fa fa-bookmark"></i> Store</label>
         <input type="text" id="node-input-bldb">
@@ -61,7 +61,7 @@
     function oneditsave(){
         
     }
-    RED.nodes.registerType('t_name out', {
+    RED.nodes.registerType('t_name-out', {
         category: 'belight-output',
         color: "#FFCC66",
         defaults: {
