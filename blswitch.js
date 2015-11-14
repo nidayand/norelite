@@ -197,6 +197,12 @@ module.exports = function (RED) {
             node.sendMsg();
         });
 
+        /* When a node is closed */
+        node.on("close", function(){
+            //Tidy up connections etc
+            clearInterval(node.timer);
+        });
+
     }
 
 
