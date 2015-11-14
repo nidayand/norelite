@@ -3,16 +3,21 @@
 
      ********************************************* -->
 <script type="text/x-red" data-help-name="bl-switch out">
-    <p>A source definition node. Will store the current value of the datasource</p>
-    <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
-    <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Belight nodes. When defining enter a prepend string to be used to uniquely identify Belight messages</p>
-    <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
+    <p>A switch node will take several inputs and based on the type and status of those messages send an instruction out to turn on or off the switch</p>
+    <p>The following variables are required to <b>msg.payload</b>:
+    <ul>
+        <li><b>lid</b> (text) is an identifier from where the message has come. E.g. the id of the sending node</li>
+        <li><b>status</b> (int) = 0 (not active) or 1 (active)</li>
+        <li><b>value</b> (int) is a value from 0 - 100 where 0 = off and 1-100 is the dim value</li>
+        <li><b>type</b> (text> is "rule", "scenario" or "direct". Where "scenario" has precedence of "rule" and "direct" has precedence of "scenario"</li>
+    </ul>
+    Example msg.payload = { lid: "abc", status: 1, value: 50, type: "scenario"} is a message for an active scenario that has a dim value of 50%
+    </p>
+    <p>The node will assess all incoming messages based on the rules of precedence and output the right message whenever a message has received or on the set <b>repeat</b> value. The outbound message will sent <b>times</b> specified.
+    </p>
+    <p>The output message will only have one integer value in the output where a valid <b>value is 0 (off) to 100 (%dim value)</b></p>
 </script>
 <script type="text/x-red" data-template-name="bl-switch out">
-    <div class="form-row">
-        <label for="node-input-bldb"><i class="fa fa-bookmark"></i> Store</label>
-        <input type="text" id="node-input-bldb">
-    </div>
     <div class="form-row">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Send code</label>
         <input type="text" id="node-input-times" placeholder="Number" style="direction:rtl; width:50px !important">
@@ -36,47 +41,24 @@
 
 </script>
 <script type="text/javascript">
-    function oneditprepareDatasource() {
-        $("#node-input-expire").change(function () {
-            if ($("#node-input-expire").is(':checked')){
-                $("#expire-details").show();
-            } else {
-                $("#expire-details").hide();
-            }
-        });
-
-    }
     RED.nodes.registerType('bl-switch out', {
         category: 'belight-output',
         color: "#FFCC66",
         defaults: {
-            bldb: {type: "bl-store", required: true},
             name: {value: "", required: true},
-            blbroker: {type: "bl-broker", required: true},
-            expire: {value: false, required: true},
-            timeout: {value: 100, required: false, validate: RED.validators.number()},
-            timeoutUnits: {value: "seconds", required: false},
-            expval : {value: false, required: false},
-            output: {value:false, required:true }
+            times: {value: 3, required: true, validate: RED.validators.number()},
+            repeat: {value: 10, required: true, validate: RED.validators.number()},
+            repeatUnits: {value: "minutes", required: false}
         },
         inputs: 1,
         outputs: 1,
         icon: "lightswitch.png",
         align: "right",
         label: function() {
-            return "Source: " + (this.name ? this.name : "undefined");
+            return (this.name ? this.name : "undefined");
         },
         labelStyle: function() {
             return (this.name ? "node_label_italic" : "");
-        },
-        oneditprepare: oneditprepareDatasource,
-        oneditsave: function(){
-            var node=this;
-            if ($("#node-input-output").is(":checked")){
-                node.outputs=1;
-            } else {
-                node.outputs=0;
-            }
         }
     });
 </script>
