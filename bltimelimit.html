@@ -1,0 +1,90 @@
+<!-- *********************************************
+
+
+     ********************************************* -->
+
+<!-- Description -->
+<script type="text/x-red" data-help-name="bl-timelimit in">
+    <p></p>
+</script>
+
+<!-- HTML -->
+<script type="text/x-red" data-template-name="bl-timelimit in">
+    <div class="form-row">
+        <label for="node-input-bldb"><i class="fa fa-bookmark"></i> Store</label>
+        <input type="text" id="node-input-bldb">
+    </div>
+    <div class="form-row">
+        <label for="node-input-blbroker"><i class="fa fa-bookmark"></i> Broker</label>
+        <input type="text" id="node-input-blbroker">
+    </div>
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-expire" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-expire" style="width: 70%;">Value can expire</label>
+    </div>
+    <div id="expire-details">
+        <div class="form-row">
+            <label for="node-input-timeout"><i class="fa fa-clock-o"></i> For</label>
+            <input type="text" id="node-input-timeout" placeholder="Time" style="direction:rtl; width:50px !important">
+            <select id="node-input-timeoutUnits" style="width:200px !important">
+              <option value="milliseconds">Milliseconds</option>
+              <option value="seconds">Seconds</option>
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days">Days</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-expval"><i class="fa fa-bookmark"></i> Expiration value</label>
+            <input type="text" id="node-input-expval">
+        </div>
+    </div>
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-output" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-output" style="width: 70%;">Use output</label>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+</script>
+<script type="text/javascript">
+    /* when opening the form */
+    function oneditprepareDatasource() {
+
+    }
+
+    /* when saving the form */
+    function oneditsave(){
+
+    }
+    RED.nodes.registerType('bl-timelimit in', {
+        category: 'belight-output',
+        color: "#FFCC66",
+        defaults: {
+            bldb: {type: "bl-store", required: true},
+            name: {value: "", required: true},
+            blbroker: {type: "bl-broker", required: true},
+            expire: {value: false, required: true},
+            timeout: {value: 100, required: false, validate: RED.validators.number()},
+            timeoutUnits: {value: "seconds", required: false},
+            expval : {value: false, required: false},
+            output: {value:false, required:true }
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "source.png",
+        align: "left",
+        label: function() {
+            return "Source: " + (this.name ? this.name : "undefined");
+        },
+        labelStyle: function() {
+            return (this.name ? "node_label_italic" : "");
+        },
+        oneditprepare: oneditprepareDatasource,
+        oneditsave: oneditsave
+    });
+</script>
