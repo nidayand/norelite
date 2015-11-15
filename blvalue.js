@@ -24,5 +24,5 @@ module.exports = function (RED) {
             //Tidy up connections etc
         });
     }
-    RED.nodes.registerType("bl-value-out", BelightValueOutNode);
+    RED.nodes.registerType("bl-value in", BelightValueOutNode);
 };

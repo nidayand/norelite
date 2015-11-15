@@ -3,12 +3,12 @@ Set value
      ********************************************* -->
 
 <!-- Description -->
-<script type="text/x-red" data-help-name="bl-value-out">
+<script type="text/x-red" data-help-name="bl-value in">
     <p>Used to modify the value of the switch. 0-100 are valid values</p>
 </script>
 
 <!-- HTML -->
-<script type="text/x-red" data-template-name="bl-value-out">
+<script type="text/x-red" data-template-name="bl-value in">
     <div class="form-row">
         <label for="node-input-slider"><i class="fa fa-lightbulb-o"></i> Value</label>
         <input type="text" id="node-input-slider" placeholder="Value" style="display:none" ><input type="text" id="slidertxt" readonly style=" width:50px"/>
@@ -41,8 +41,8 @@ Set value
     function oneditsave(){
 
     }
-    RED.nodes.registerType('bl-value-out', {
-        category: 'belight-output',
+    RED.nodes.registerType('bl-value in', {
+        category: 'belight-input',
         color: "#FFCC66",
         defaults: {
             slider: {value: 100, required:true, validate: RED.validators.number()}
@@ -50,7 +50,7 @@ Set value
         inputs: 1,
         outputs: 1,
         icon: "light.png",
-        align: "right",
+        //align: "left",
         label: function() {
             return "Value: Set to " + this.slider + "%";
         },
