@@ -114,7 +114,7 @@
         outputs: 1,
         icon: "fa-clock-o.png",
         label: function () {
-            return "Limit: " + this.from + "-" + this.to;
+            return (this.from && this.to) ? (this.from + "-" + this.to) : "Undefined";
         },
         oneditprepare: oneditprepareDatasource,
         oneditsave: oneditsave
