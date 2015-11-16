@@ -1,0 +1,84 @@
+<!-- *********************************************
+
+
+     ********************************************* -->
+
+<!-- Description -->
+<script type="text/x-red" data-help-name="bl-dayslimit in">
+    <p>>Is used to limit the availability. If an incoming value has status = 1 the value will be changed to status = 0 if the current day is not active</p>
+</script>
+
+<!-- HTML -->
+<script type="text/x-red" data-template-name="bl-dayslimit in">
+    <div class="form-row">
+        <label for="node-input-days"><i class="fa fa-calendar-check-o"></i> Days</label>
+        <table style="display: inline-block;">
+            <tr>
+                <td><input type="checkbox" id="node-input-mon" value="1">Mon</td>
+                <td><input type="checkbox" id="node-input-tue" value="1">Tue</td>
+                <td><input type="checkbox" id="node-input-wed" value="1">Wed</td>
+                <td><input type="checkbox" id="node-input-thu" value="1">Thu</td>
+            </tr>
+            <tr>
+                <td><input type="checkbox" id="node-input-fri" value="1">Fri</td>
+                <td><input type="checkbox" id="node-input-sat" value="1">Sat</td>
+                <td><input type="checkbox" id="node-input-sun" value="1">Sun</td>
+            </tr>
+        </table>
+    </div>
+</script>
+<script type="text/javascript">
+    /* when opening the form */
+    function oneditprepareDatasource() {
+
+    }
+
+    /* when saving the form */
+    function oneditsave() {
+
+    }
+    RED.nodes.registerType('bl-dayslimit in', {
+        category: 'belight-input',
+        color: "#FFCC66",
+        defaults: {
+            mon : {value:true},
+            tue : {value:true},
+            wed : {value:true},
+            thu : {value:true},
+            fri : {value:true},
+            sat : {value:true},
+            sun : {value:true}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "fa-calendar-check-o.png",
+        label: function () {
+            var txt ="";
+            if (this.mon){
+                txt+="Mon"
+            }
+            if (this.tue){
+                txt += (txt!="" ? ",":"")+"Tue";
+            }
+            if (this.wed){
+                txt += (txt!="" ? ",":"")+"Wed";
+            }
+            if (this.thu){
+                txt += (txt!="" ? ",":"")+"Thu";
+            }
+            if (this.fri){
+                txt += (txt!="" ? ",":"")+"Fri";
+            }
+            if (this.sat){
+                txt += (txt!="" ? ",":"")+"Sat";
+            }
+            if (this.sun){
+                txt += (txt!="" ? ",":"")+"Sun";
+            }
+
+            return txt;
+        },
+        oneditprepare: oneditprepareDatasource,
+        oneditsave: oneditsave
+    });
+</script>
