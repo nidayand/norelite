@@ -28,7 +28,7 @@ module.exports = function(RED) {
         this.mqttConfig = RED.nodes.getNode(this.blbroker);
         this.mqttPre = "/source/";
         this.rules = n.rules;
-        this.checkall = n.checkall || "true";
+        this.checkall = (n.checkall === "true");
         var node = this;
 
         //Tidy up to ensure correct numbers in values
@@ -39,7 +39,6 @@ module.exports = function(RED) {
                 rule.v2 = Number(rule.v2);
             }
         }
-console.log(this.rules);
 
         //Connect to broker
         if (this.mqttConfig) {
@@ -58,7 +57,8 @@ console.log(this.rules);
 
         /**/
         node.assess = function(res){
-            var alltrue = true;
+
+            var numbersTrue = 0;
             for (var i=0; i<node.rules.length; i+=1) {
                 var rule = node.rules[i];
 
@@ -73,19 +73,23 @@ console.log(this.rules);
 
                 //Validate
                 if (operators[rule.t](test,rule.v, rule.v2)) {
-                    if (node.checkall == "false") { break; }
+                    numbersTrue++;
+                    if (!node.checkall) { break; }
                 } else {
-                    alltrue = false;
-                    if (node.checkall == "true") { break; }
+                    if (node.checkall) { break; }
                 }
             }
-            if (alltrue){
-                var msg = {};
-                msg.payload = { lid : node.id, type: "rule", status : 1, value:100};
+
+            var msg = {};
+            msg.payload = { lid : node.id, type: "rule", status : 1, value:100};
+            if ((node.checkall && numbersTrue === node.rules.length) || (!node.checkall && (numbersTrue>0))){
+                msg.payload.status = 1;
                 blcommon.setStatus(node, 1, "Active");
             } else {
+                msg.payload.status = 0;
                 blcommon.setStatus(node, 0, "Not active");
             }
+            node.send(msg);
         }
 
         if (this.dbConfig) {
