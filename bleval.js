@@ -138,6 +138,15 @@ console.log(this.rules);
             this.error("missing bldb configuration");
         }
 
+        this.on("close", function () {
+            if (this.clientDb) {
+                this.clientDb.close();
+            }
+            if (this.clientMqtt) {
+                this.clientMqtt.disconnect();
+            }
+        });
+
     }
     RED.nodes.registerType("bl-eval in", blevalNode);
 }
