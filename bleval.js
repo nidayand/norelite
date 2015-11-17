@@ -106,18 +106,22 @@ console.log(this.rules);
                             //Go through all sources and validate
                             var res = [];
                             for(var j=0; j<node.rules.length; j+=1){
-                                var id_t = node.rules[j].s;
-                                blcommon.getKvp(db,"source",id_t , function(val,err){
-                                    res.push({id:id_t, val:val, error: !err?false:true});
+                                //var id_t = node.rules[j].s;
+                                var getVal = function(id_t){
+                                    blcommon.getKvp(db,"source",id_t , function(val,err){
+                                        res.push({id:id_t, val:val, error: !err?false:true});
 
-                                    //Continue if all db info has been received
-                                    if(res.length==node.rules.length){
-                                        console.log("r: "+JSON.stringify(res));
+                                        //Continue if all db info has been received
+                                        if(res.length==node.rules.length){
+                                            //console.log("r: "+JSON.stringify(res));
 
-                                        //Send for evaluation
-                                        node.assess(res);
-                                    }
-                                });
+                                            //Send for evaluation
+                                            node.assess(res);
+                                        }
+                                    });
+                                }
+                                getVal(node.rules[j].s);
+
                             }
 
                             //Compare if all are
