@@ -39,6 +39,7 @@ module.exports = function(RED) {
                 rule.v2 = Number(rule.v2);
             }
         }
+console.log(this.rules);
 
         //Connect to broker
         if (this.mqttConfig) {
@@ -53,6 +54,38 @@ module.exports = function(RED) {
         } else {
             node.error("missing blbroker configuration");
             blcommon.setStatus(node, -1, "Missing blbroker configuration");
+        }
+
+        /**/
+        node.assess = function(res){
+            var alltrue = true;
+            for (var i=0; i<node.rules.length; i+=1) {
+                var rule = node.rules[i];
+
+                //Get the value from the db response
+                var test;
+                for (var j=0; j<res.length; j++){
+                    if (res[j].id == rule.s){
+                        test = res[j].val;
+                        break;
+                    }
+                }
+
+                //Validate
+                if (operators[rule.t](test,rule.v, rule.v2)) {
+                    if (node.checkall == "false") { break; }
+                } else {
+                    alltrue = false;
+                    if (node.checkall == "true") { break; }
+                }
+            }
+            if (alltrue){
+                var msg = {};
+                msg.payload = { lid : node.id, type: "rule", status : 1, value:100};
+                blcommon.setStatus(node, 1, "Active");
+            } else {
+                blcommon.setStatus(node, 0, "Not active");
+            }
         }
 
         if (this.dbConfig) {
@@ -76,11 +109,21 @@ module.exports = function(RED) {
                                 var id_t = node.rules[j].s;
                                 blcommon.getKvp(db,"source",id_t , function(val,err){
                                     res.push({id:id_t, val:val, error: !err?false:true});
+
                                     //Continue if all db info has been received
                                     if(res.length==node.rules.length){
                                         console.log("r: "+JSON.stringify(res));
+
+                                        //Send for evaluation
+                                        node.assess(res);
                                     }
                                 });
+                            }
+
+                            //Compare if all are
+                            var ok = true;
+                            for (var i=0; i<node.rules.length; i+=1) {
+                                var rule = node.rules[i];
                             }
                         });
                     }
