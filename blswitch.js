@@ -126,7 +126,7 @@ module.exports = function (RED) {
             if (node.allIds.length > 0) {
                 var output = node.getOutputMsg();
                 var msg = {
-                    payload: (output.state == 0 ? 0 : output.value)
+                    payload: output
                 };
 
                 /* Send the message the specified number of times */
