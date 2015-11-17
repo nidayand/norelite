@@ -108,7 +108,12 @@ module.exports = function (RED) {
                             node.send(msg);
                         }
 
+
                     });
+                    //Initially trigger a message for the rules to be triggered based on historical data
+                    setTimeout(function(){
+                        blcommon.MqttPub(node.mqttConfig, node.clientMqtt, node.mqttPre + node.id, "N/A");
+                    }, 5000);
                 }
             });
         } else {
