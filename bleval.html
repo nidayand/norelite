@@ -1,6 +1,7 @@
 <script type="text/x-red" data-help-name="bl-eval in">
     <p>One of the key nodes in Belight. It triggers on changes in sources and evaluate sources according to criterias and outputs a message that includes if the status is active or not active</p>
     <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Belight nodes. When defining enter a prepend string to be used to uniquely identify Belight messages</p>
+    <p>If <b>Use input</b> is active then inbound message will be used to forward with the status unchanged if the rule is true or status = 0 if the rule is false. The "value" will not be changed from the inbound message.</p>
     <p>The <b>output message</b> is in the format of an javascript object on <b>msg.payload</b> with the following structure: { lid : node.id, type: "rule", status : 1, value:100}. <ul>
     <li><b>lid</b> is a sender identifier (usually the node id)</li>
     <li><b>type</b> is from this node always "rule" but can in other nodes be "scenario" or "direct" (in the bl-switch node messages from direct has precedence over scenario and scenario has precedence over rule)</li>
@@ -34,6 +35,11 @@
         </select>
     </div>
     <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-inputson" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-inputson" style="">Use input</label>
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
@@ -48,7 +54,8 @@
             blbroker: {type: "bl-broker", required: true},
             name: {value:""},
             rules: {value:[{t:"eq", v:""}]},
-            checkall: {value:"true", required:true}
+            checkall: {value:"true", required:true},
+            inputson: {value: false, required:true}
         },
         inputs: 0,
         outputs: 1,
@@ -183,6 +190,11 @@
             }
         },
         oneditsave: function() {
+            if ($("#node-input-inputson").is(":checked")){
+                this.inputs=1;
+            } else {
+                this.inputs=0;
+            }
             var rules = $("#node-input-rule-container").children();
             var ruleset;
             var node = this;

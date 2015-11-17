@@ -32,6 +32,12 @@ module.exports = function(RED) {
         this.timer;
         var node = this;
 
+        node.inputson = n.inputson; //The node has an input
+        node.inputreceived = false; //Indicates if an inbound msg has been received
+
+        //Set the base msg payload. Can be modified if the rule has an input
+        node.basepayload = { lid : node.id, type: "rule", status : 1, value:100};
+
         //Tidy up to ensure correct numbers in values
         for (var i=0; i<this.rules.length; i+=1) {
             var rule = this.rules[i];
@@ -82,15 +88,25 @@ module.exports = function(RED) {
             }
 
             var msg = {};
-            msg.payload = { lid : node.id, type: "rule", status : 1, value:100};
+            msg.payload = node.basepayload;
             if ((node.checkall && numbersTrue === node.rules.length) || (!node.checkall && (numbersTrue>0))){
-                msg.payload.status = 1;
+                /* Only set to true if there are no inputs. Otherwise that should be inherited from the input message */
+                if (!node.inputson){
+                    msg.payload.status = 1;
+                }
+                //Show that the rule is active
                 blcommon.setStatus(node, 1, "Active");
             } else {
                 msg.payload.status = 0;
                 blcommon.setStatus(node, 0, "Not active");
             }
-            node.send(msg);
+
+            /* Only send out the message if no input is used or if a new base payload has been received */
+            if (!node.inputson || node.inputreceived){
+                //Node does not have an input
+                node.send(msg);
+            }
+
         }
 
         if (this.dbConfig) {
@@ -143,7 +159,7 @@ module.exports = function(RED) {
             this.error("missing bldb configuration");
         }
 
-        this.on("close", function () {
+        node.on("close", function () {
             if (this.clientDb) {
                 this.clientDb.close();
             }
@@ -154,6 +170,14 @@ module.exports = function(RED) {
                 clearInterval(this.timer);
             }
         });
+
+        /* Register a listner if the node has an input */
+        if (node.inputson){
+            node.on("input", function(msg){
+                //Set the new basepayload to be used in this rule
+                node.basepayload = msg.payload;
+            });
+        }
 
     }
     RED.nodes.registerType("bl-eval in", blevalNode);
