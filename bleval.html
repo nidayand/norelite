@@ -1,5 +1,13 @@
 <script type="text/x-red" data-help-name="bl-eval in">
-    <p>Triggers on changes in sources and evaluate sources according to criterias and either output true or false</p>
+    <p>One of the key nodes in Belight. It triggers on changes in sources and evaluate sources according to criterias and outputs a message that includes if the status is active or not active</p>
+    <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Belight nodes. When defining enter a prepend string to be used to uniquely identify Belight messages</p>
+    <p>The <b>output message</b> is in the format of an javascript object on <b>msg.payload</b> with the following structure: { lid : node.id, type: "rule", status : 1, value:100}. <ul>
+    <li><b>lid</b> is a sender identifier (usually the node id)</li>
+    <li><b>type</b> is from this node always "rule" but can in other nodes be "scenario" or "direct" (in the bl-switch node messages from direct has precedence over scenario and scenario has precedence over rule)</li>
+    <li><b>status</b> is 0 or 1 depending if the rule is active or not</li>
+    <li><b>value</b> is the dim level of the switch (0-100) and will always be 100 from the rule node. Use bl-value to modify the output</li>
+    </ul>
+
 </script>
 
 <script type="text/x-red" data-template-name="bl-eval in">
@@ -44,9 +52,9 @@
         },
         inputs: 0,
         outputs: 1,
-        icon: "bl-eval.png",
+        icon: "fa-question-circle.png",
         label: function() {
-            return "Eval: "+ (this.name || "undefined");
+            return (this.name || "undefined");
         },
         labelStyle: function() {
             return (this.name ? "node_label_italic" : "");

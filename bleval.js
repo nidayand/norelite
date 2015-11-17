@@ -29,6 +29,7 @@ module.exports = function(RED) {
         this.mqttPre = "/source/";
         this.rules = n.rules;
         this.checkall = (n.checkall === "true");
+        this.timer;
         var node = this;
 
         //Tidy up to ensure correct numbers in values
@@ -103,10 +104,7 @@ module.exports = function(RED) {
                     //Connection to db successful
                     blcommon.setStatus(node, 0, "Connected");
 
-                    //Add listeners to the MQTT-messages
-                    for (var i=0; i<node.rules.length; i+=1) {
-                        blcommon.MqttSub(node.mqttConfig, node.clientMqtt, node.mqttPre+node.rules[i].s, function(topic,payload,qos,retain){
-
+                    var initiateAssessment = function(){
                             //Go through all sources and validate
                             var res = [];
                             for(var j=0; j<node.rules.length; j+=1){
@@ -117,7 +115,10 @@ module.exports = function(RED) {
 
                                         //Continue if all db info has been received
                                         if(res.length==node.rules.length){
-                                            //console.log("r: "+JSON.stringify(res));
+                                            //Start timer (only called once)
+                                            if (!node.timer){
+                                                node.timer = setInterval(initiateAssessment, 60*1000);
+                                            }
 
                                             //Send for evaluation
                                             node.assess(res);
@@ -127,12 +128,12 @@ module.exports = function(RED) {
                                 getVal(node.rules[j].s);
 
                             }
+                    }
 
-                            //Compare if all are
-                            var ok = true;
-                            for (var i=0; i<node.rules.length; i+=1) {
-                                var rule = node.rules[i];
-                            }
+                    //Add listeners to the MQTT-messages
+                    for (var i=0; i<node.rules.length; i+=1) {
+                        blcommon.MqttSub(node.mqttConfig, node.clientMqtt, node.mqttPre+node.rules[i].s, function(topic,payload,qos,retain){
+                            initiateAssessment();
                         });
                     }
 
@@ -148,6 +149,9 @@ module.exports = function(RED) {
             }
             if (this.clientMqtt) {
                 this.clientMqtt.disconnect();
+            }
+            if (this.timer){
+                clearInterval(this.timer);
             }
         });
 
