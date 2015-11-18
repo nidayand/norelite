@@ -174,7 +174,7 @@ module.exports = function (RED) {
                 errMsg += "type is missing in msg.payload\n";
             }
             if (errMsg !== "") {
-                console.log(errMsg);
+                node.error(errMsg);
                 return;
             }
             //Check if linkid already is in allIds array
