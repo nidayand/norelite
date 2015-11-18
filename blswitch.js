@@ -145,6 +145,9 @@ module.exports = function (RED) {
                         }, node.repeat);
 
                     }
+                } else if(node.activeId === "none"){
+                    //Send also if there is none active to turn off
+                    node.send(msg);
                 }
 
                 //Set status message
