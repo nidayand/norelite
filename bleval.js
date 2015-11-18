@@ -176,6 +176,7 @@ module.exports = function(RED) {
             node.on("input", function(msg){
                 //Set the new basepayload to be used in this rule
                 node.basepayload = msg.payload;
+                node.inputreceived = true;
             });
         }
 
