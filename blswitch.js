@@ -33,7 +33,8 @@ module.exports = function (RED) {
         { lid: xyz, status: 0/1, value:0-100, type: "rule"/"scenario"/"direct"}
         */
         node.allIds = [];
-        node.activeId = "none";
+        node.activeId; //Keeps the active id of receiving message
+        node.prevMsg; //Keeps store of the last sent out msg
 
 
         /* Method to create output message */
@@ -119,6 +120,7 @@ module.exports = function (RED) {
             } //getOutputMsg
 
         /* Send the message */
+
         node.sendMsg = function (repeatCall) {
             //Save prev id that is active
             var prevActiveId = node.activeId;
@@ -130,12 +132,19 @@ module.exports = function (RED) {
                 };
 
                 /* Send the message the specified number of times */
-                if (prevActiveId != node.activeId || repeatCall) {
+                if (prevActiveId == undefined || prevActiveId != node.activeId || repeatCall) {
                     /* Clear timer if it is not a repeatCall (called from timer) */
                     clearTimeout(node.timer);
 
-                    for (var i = 0; i < node.times; i++) {
-                        node.send(msg);
+                    //Check if status and value has changed from prev
+                    if (node.prevMsg == undefined ||
+                        (node.prevMsg.payload.status != msg.payload.status || node.prevMsg.payload.value != msg.payload.value) ||
+                        repeatCall){
+                        for (var i = 0; i < node.times; i++) {
+                            node.send(msg);
+                        }
+                        //Save current message for review next time the method is called
+                        node.prevMsg = msg;
                     }
 
                     /* Set timer repeat function*/
