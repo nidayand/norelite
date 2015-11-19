@@ -132,22 +132,16 @@ module.exports = function (RED) {
                 /* Send the message the specified number of times */
                 if (prevActiveId != node.activeId || repeatCall) {
                     /* Clear timer if it is not a repeatCall (called from timer) */
-                    if (!repeatCall && node.timer) {
-                        clearInterval(node.timer);
-                    }
+                    clearTimeout(node.timer);
+
                     for (var i = 0; i < node.times; i++) {
                         node.send(msg);
                     }
+
                     /* Set timer repeat function*/
-                    if (!repeatCall) {
-                        node.timer = setInterval(function () {
+                    node.timer = setTimeout(function () {
                             node.sendMsg(true)
                         }, node.repeat);
-
-                    }
-                } else if(node.activeId === "none"){
-                    //Send also if there is none active to turn off
-                    node.send(msg);
                 }
 
                 //Set status message
