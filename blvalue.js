@@ -15,7 +15,7 @@ module.exports = function (RED) {
         /* When a message is received */
         node.on("input", function(msg){
             msg.payload.lid = node.id;
-            msg.payload.value = node.slider;
+            msg.payload.value = parseInt(node.slider);
             node.send(msg);
         });
 
