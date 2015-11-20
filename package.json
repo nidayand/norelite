@@ -1,0 +1,41 @@
+{
+  "name": "norelite",
+  "version": "0.1",
+  "description": "A set of node-red nodes to build persistent home automation management",
+  "author": {
+    "name": "nidayand",
+    "email": "pggithub@gothager.se"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidayand/norelite.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "node-red",
+    "rfxcom",
+    "RFXtrx433",
+      "home",
+      "automation",
+      "mqtt",
+      "light"
+      "control"
+  ],
+  "node-red": {
+    "nodes": {
+      "nrl-source out": "bldatasource.js",
+        "nrl-dayslimit in": "bldayslimit.js",
+        "nrl-eval in": "bleval.js",
+        "nrl-rfxcom-out": "blrfxcom.js",
+        "nrl-switch out": "blswitch.js",
+        "nrl-timelimit in": "bltimelimit.js",
+        "nrl-value in": "blvalue.js"
+    }
+  },
+  "dependencies": {
+    "mongodb": ">=2.0.47",
+    "mqtt":">=1.5.0",
+      "events":">=1.1.0",
+      "util": ">=0.10.3"
+  }
+}
