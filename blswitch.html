@@ -2,7 +2,7 @@
         DATASOURCE: switch node
 
      ********************************************* -->
-<script type="text/x-red" data-help-name="bl-switch out">
+<script type="text/x-red" data-help-name="nrl-switch out">
     <p>A switch node will take several inputs and based on the type and status of those messages send an instruction out to turn on or off the switch</p>
     <p>The following variables are required to <b>msg.payload</b>:
     <ul>
@@ -17,7 +17,7 @@
     </p>
     <p>The output message will only have one integer value in the output where a valid <b>value is 0 (off) to 100 (%dim value)</b></p>
 </script>
-<script type="text/x-red" data-template-name="bl-switch out">
+<script type="text/x-red" data-template-name="nrl-switch out">
     <div class="form-row">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Send code</label>
         <input type="text" id="node-input-times" placeholder="Number" style="direction:rtl; width:50px !important">
@@ -41,8 +41,8 @@
 
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('bl-switch out', {
-        category: 'belight-output',
+    RED.nodes.registerType('nrl-switch out', {
+        category: 'norelite-output',
         color: "#FFCC66",
         defaults: {
             name: {value: "", required: true},

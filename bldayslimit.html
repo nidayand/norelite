@@ -4,12 +4,12 @@
      ********************************************* -->
 
 <!-- Description -->
-<script type="text/x-red" data-help-name="bl-dayslimit in">
+<script type="text/x-red" data-help-name="nrl-dayslimit in">
     <p>>Is used to limit the availability. If an incoming value has status = 1 the value will be changed to status = 0 if the current day is not active</p>
 </script>
 
 <!-- HTML -->
-<script type="text/x-red" data-template-name="bl-dayslimit in">
+<script type="text/x-red" data-template-name="nrl-dayslimit in">
     <div class="form-row">
         <label for="node-input-days"><i class="fa fa-calendar-check-o"></i> Days</label>
         <table style="display: inline-block;">
@@ -37,8 +37,8 @@
     function oneditsave() {
 
     }
-    RED.nodes.registerType('bl-dayslimit in', {
-        category: 'belight-input',
+    RED.nodes.registerType('nrl-dayslimit in', {
+        category: 'norelite-input',
         color: "#FFCC66",
         defaults: {
             mon : {value:true},

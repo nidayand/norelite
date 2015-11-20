@@ -6,7 +6,7 @@ Configuration node datasources
 <!--
 Configuration node for mqtt to broadcast events
 -->
-<script type="text/x-red" data-template-name="bl-broker">
+<script type="text/x-red" data-template-name="nrl-broker">
     <div class="form-row node-input-broker">
         <label for="node-config-input-broker"><i class="fa fa-globe"></i> Broker</label>
         <input class="input-append-left" type="text" id="node-config-input-broker" placeholder="localhost" style="width: 40%;">
@@ -32,7 +32,7 @@ Configuration node for mqtt to broadcast events
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('bl-broker', {
+    RED.nodes.registerType('nrl-broker', {
         category: 'config',
         defaults: {
             broker: {
@@ -48,7 +48,7 @@ Configuration node for mqtt to broadcast events
                 value: ""
             },
             prependtxt: {
-                value: "/belight",
+                value: "/norelite",
                 required: true
             }
         },
@@ -72,7 +72,7 @@ Configuration node for mqtt to broadcast events
 <!--
 Configuration node for the database
 -->
-<script type="text/x-red" data-template-name="bl-store">
+<script type="text/x-red" data-template-name="nrl-store">
     <div class="form-row">
         <label for="node-config-input-hostname"><i class="fa fa-bookmark"></i> Host</label>
         <input class="input-append-left" type="text" id="node-config-input-hostname" placeholder="localhost" style="width: 40%;">
@@ -97,7 +97,7 @@ Configuration node for the database
     </div>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('bl-store', {
+    RED.nodes.registerType('nrl-store', {
         category: 'config',
         color: "rgb(218, 196, 180)",
         defaults: {
@@ -110,7 +110,7 @@ Configuration node for the database
                 required: true
             },
             db: {
-                value: "belight",
+                value: "norelite",
                 required: true
             },
             name: {

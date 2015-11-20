@@ -128,5 +128,5 @@ module.exports = function (RED) {
             }
         });
     }
-    RED.nodes.registerType("bl-source out", SourceOutNode);
+    RED.nodes.registerType("nrl-source out", SourceOutNode);
 };

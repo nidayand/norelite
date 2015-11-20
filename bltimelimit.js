@@ -99,5 +99,5 @@ module.exports = function (RED) {
             //Tidy up connections etc
         });
     }
-    RED.nodes.registerType("bl-timelimit in", TimeLimitInNode);
+    RED.nodes.registerType("nrl-timelimit in", TimeLimitInNode);
 };

@@ -58,5 +58,5 @@ module.exports = function (RED) {
             //Tidy up connections etc
         });
     }
-    RED.nodes.registerType("bl-dayslimit in", DaysLimitInNode);
+    RED.nodes.registerType("nrl-dayslimit in", DaysLimitInNode);
 };

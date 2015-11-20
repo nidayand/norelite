@@ -4,12 +4,12 @@
      ********************************************* -->
 
 <!-- Description -->
-<script type="text/x-red" data-help-name="bl-timelimit in">
+<script type="text/x-red" data-help-name="nrl-timelimit in">
     <p>Is used to limit the availability. If an incoming value has status = 1 the value will be changed to status = 0 if the current time is between the selected values</p>
 </script>
 
 <!-- HTML -->
-<script type="text/x-red" data-template-name="bl-timelimit in">
+<script type="text/x-red" data-template-name="nrl-timelimit in">
     <div class="form-row">
         <label for="node-input-from"><i class="fa fa-clock-o"></i> From</label>
         <input type="text" id="node-input-from" style=" width:50px">
@@ -61,8 +61,8 @@
             $("#node-input-to").val(nto);
         }
     }
-    RED.nodes.registerType('bl-timelimit in', {
-        category: 'belight-input',
+    RED.nodes.registerType('nrl-timelimit in', {
+        category: 'norelite-input',
         color: "#FFCC66",
         defaults: {
             to: {

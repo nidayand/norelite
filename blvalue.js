@@ -7,7 +7,7 @@ module.exports = function (RED) {
     /*
         Defines the output node for a rule. Copied to a large extent from 66-mongodb.js
     */
-    function BelightValueOutNode(config) {
+    function noreliteValueOutNode(config) {
         RED.nodes.createNode(this, config);
         this.slider = config.slider;
         var node = this;
@@ -24,5 +24,5 @@ module.exports = function (RED) {
             //Tidy up connections etc
         });
     }
-    RED.nodes.registerType("bl-value in", BelightValueOutNode);
+    RED.nodes.registerType("nrl-value in", noreliteValueOutNode);
 };

@@ -213,5 +213,5 @@ module.exports = function (RED) {
     }
 
 
-    RED.nodes.registerType("bl-switch out", SwitchOutNode);
+    RED.nodes.registerType("nrl-switch out", SwitchOutNode);
 };

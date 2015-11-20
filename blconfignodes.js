@@ -18,7 +18,7 @@ module.exports = function (RED) {
             this.password = this.credentials.password;
         }
     }
-    RED.nodes.registerType("bl-broker", MQTTBrokerNode, {
+    RED.nodes.registerType("nrl-broker", MQTTBrokerNode, {
         credentials: {
             user: {
                 type: "text"
@@ -33,7 +33,7 @@ module.exports = function (RED) {
         Set the configuration node for mongodb.
         Information is copied from the 66-mongodb.js
     */
-    function BelightNode(n) {
+    function NoreliteNode(n) {
         RED.nodes.createNode(this, n);
         this.hostname = n.hostname;
         this.port = n.port;
@@ -49,7 +49,7 @@ module.exports = function (RED) {
         this.url = url;
     }
 
-    RED.nodes.registerType("bl-store", BelightNode, {
+    RED.nodes.registerType("nrl-store", NoreliteNode, {
         credentials: {
             user: {
                 type: "text"
