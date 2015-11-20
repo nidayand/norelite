@@ -1,0 +1,51 @@
+<!-- *********************************************
+
+
+     ********************************************* -->
+
+<!-- Description -->
+<script type="text/x-red" data-help-name="nrl-rfxcom-out">
+    <p>The node will convert the Norelite payload into a format that is applicable for the <a href="https://www.npmjs.com/package/node-red-contrib-rfxcom">node-red-contrib-rfxcom</a> input format. Use the node just before the rfx-lights sensor from <a href="https://www.npmjs.com/package/node-red-contrib-rfxcom">node-red-contrib-rfxcom</a>.</p>
+    <p>Enter the switch code in <b>code</b> field and a name for the display</p>
+</script>
+
+<!-- HTML -->
+<script type="text/x-red" data-template-name="nrl-rfxcom-out">
+    <div class="form-row">
+        <label for="node-input-code"><i class="fa fa-bookmark"></i> Code</label>
+        <input type="text" id="node-input-code">
+    </div>
+    <div class="form-row">
+        <label for="node-input-code"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+</script>
+<script type="text/javascript">
+    /* when opening the form */
+    function oneditprepareDatasource() {
+
+    }
+
+    /* when saving the form */
+    function oneditsave(){
+
+    }
+    RED.nodes.registerType('nrl-rfxcom-out', {
+        category: 'norelite-output',
+        color: "#FFCC66",
+        defaults: {
+            name: {value: "", required: true},
+            code: {value: "", required: true},
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "fa-compress.png",
+        align: "right",
+        label: function() {
+            return (this.name ? this.name : "undefined");
+        },
+        oneditprepare: oneditprepareDatasource,
+        oneditsave: oneditsave
+    });
+</script>
