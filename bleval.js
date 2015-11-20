@@ -93,16 +93,32 @@ module.exports = function(RED) {
                 /* Only set to true if there are no inputs. Otherwise that should be inherited from the input message */
                 if (!node.inputson){
                     msg.payload.status = 1;
+
+                    //Show that the rule is active
+                    blcommon.setStatus(node, 1, "Active");
+                } else {
+                    if (msg.payload.status === 1 && msg.payload.value > 0 && node.inputreceived){
+
+                        //Show that the rule is active
+                        blcommon.setStatus(node, 1, "Active");
+                    } else {
+                        //Make sure that status = 0 if no new message has arrived
+                        msg.payload.status = 0;
+
+                        //Show that the rule is inactive
+                        blcommon.setStatus(node, -1, "Inactive");
+                    }
                 }
-                //Show that the rule is active
-                blcommon.setStatus(node, 1, "Active");
             } else {
                 msg.payload.status = 0;
-                blcommon.setStatus(node, 0, "Not active");
+                blcommon.setStatus(node, -1, "Inactive");
             }
 
             /* Only send out the message if no input is used or if a new base payload has been received */
             if (!node.inputson || node.inputreceived){
+                //Set the correct id
+                msg.payload.lid = node.id;
+
                 //Node does not have an input
                 node.send(msg);
             }
