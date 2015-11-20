@@ -23,7 +23,7 @@ module.exports = function (RED) {
             if (msg.payload.status === 1 && msg.payload.value === 100){
                 val = "On";
                 blcommon.setStatus(node, 1, "On");
-            } else if (msg.payload === 1 && msg.payload.value > 0){
+            } else if (msg.payload.status === 1 && msg.payload.value > 0){
                 val = "level "+(msg.payload.value/100);
                 blcommon.setStatus(node, 1, "On "+msg.payload.value+"%");
             } else {
