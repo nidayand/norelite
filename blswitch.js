@@ -156,7 +156,7 @@ module.exports = function (RED) {
 
                 //Set status message
                 var state = 1;
-                if (msg.payload === 0) {
+                if (msg.payload.state === 0 || msg.payload.value === 0) {
                     state = -1;
                 }
                 blcommon.setStatus(node, state, output.type + "/" + output.value + "%");
