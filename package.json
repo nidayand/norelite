@@ -31,9 +31,5 @@
             "nrl-timelimit in": "bltimelimit.js",
             "nrl-value in": "blvalue.js"
         }
-    },
-    "dependencies": {
-        "mongodb": ">=2.0.47",
-        "mqtt": ">=1.5.0"
     }
 }
