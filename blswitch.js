@@ -140,6 +140,7 @@ module.exports = function (RED) {
                     if (node.prevMsg == undefined ||
                         (node.prevMsg.payload.status != msg.payload.status || node.prevMsg.payload.value != msg.payload.value) ||
                         repeatCall){
+
                         for (var i = 0; i < node.times; i++) {
                             setTimeout( function(){ node.send(msg); }, 100*(i+1));
                             //node.send(msg);
@@ -165,6 +166,7 @@ module.exports = function (RED) {
 
 
         /* On received messages */
+        node.receiveTimeout;
         node.on("input", function (msg) {
             //Validate inbound message
             var errMsg = "";
@@ -200,8 +202,13 @@ module.exports = function (RED) {
                 node.allIds.push(msg.payload);
             }
 
-            //Send messages
-            node.sendMsg();
+            /* Set a small delay to prevent unnecessary processing before actually all messages
+            have been received. E.g. when starting for the first time */
+            if (node.receiveTimeout){
+                clearTimeout(node.receiveTimeout);
+            }
+            node.receiveTimeout = setTimeout(function(){node.sendMsg();},1000);
+
         });
 
         /* When a node is closed */
