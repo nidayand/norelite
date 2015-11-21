@@ -16,9 +16,9 @@ module.exports = function (RED) {
 
         /* When a message is received */
         node.on("input", function(msg){
-            msg.payload.lid = node.id;
+            var nmsg = {};
+            nmsg.topic = node.code;
 
-            msg.topic = node.code;
             var val;
             if (msg.payload.status === 1 && msg.payload.value === 100){
                 val = "On";
@@ -30,9 +30,9 @@ module.exports = function (RED) {
                 val = "Off";
                 blcommon.setStatus(node, -1, "Off");
             }
-            msg.payload = val;
+            nmsg.payload = val;
 
-            node.send(msg);
+            node.send(nmsg);
         });
 
     }
