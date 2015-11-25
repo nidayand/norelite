@@ -1,6 +1,10 @@
 <!-- norelite config -->
 <script type="text/x-red" data-template-name="norelite-config">
     <div class="form-row">
+        <label for="node-input-delay"><i class="fa fa-clock-o"></i> Rule send delay</label>
+        <input type="text" id="node-config-input-delay" style="direction:rtl; width:50px !important"> seconds
+    </div>
+    <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
@@ -10,9 +14,8 @@
         category: 'config',
         color: "rgb(218, 196, 180)",
         defaults: {
-            name: {
-                value: ""
-            }
+            delay: {value: 5, required: true, validate: RED.validators.number()},
+            name:  {value: ""}
         },
         label: function () {
             return this.name || "norelite Config";

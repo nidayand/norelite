@@ -11,6 +11,7 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, n);
         this.config = n.config;
         this.name = n.name;
+        this.delay = n.delay;
         this.initialised = false;
     }
     RED.nodes.registerType("norelite-config", NoreliteConfig);
@@ -118,9 +119,11 @@ module.exports = function (RED) {
         this.configNode = RED.nodes.getNode(n.config);
         this.rules = n.rules;
         this.checkall = (n.checkall === "true");
-        this.timer;
+        this.repeattimer;   //Timer for resending messages
+        this.timeouttimer;  //Timer for managing a delay in send (if there are many incoming messages)
         this.values = []; //Keeping all the inbound messages
         var self = this;
+
 
         //Keeps track if an input msg has been received
         self.inputreceived = false;
@@ -208,15 +211,18 @@ module.exports = function (RED) {
                 msg.payload.lid = self.id;
 
                 //Send the message
-                self.send(msg);
+                self.timeouttimer = setTimeout(function(){
+                    self.send(msg);
+
+                    //Only setup repeat for top eval node
+                    if (!self.inputson){
+                        self.repeattimer = setInterval(self.assessRules, 60*1000);
+                    }
+                }, parseInt(self.configNode.delay)*1000);
 
                 //Setup repeat every 1min
-                if (self.timer){
-                    clearInterval(self.timer);
-                }
-                //Only setup repeat for top eval node
-                if (!self.inputson){
-                    self.timer = setInterval(self.assessRules, 60*1000);
+                if (self.repeattimer){
+                    clearInterval(self.repeattimer);
                 }
             }
 
@@ -238,9 +244,14 @@ module.exports = function (RED) {
             //Setup the listener for the event to re-evaluate the rules
             _.each(list, function(id){
                 self.configNode.onConfig(id, function(val){
+                    //Stop possible delay timer
+                    if (self.timeouttimer){
+                        clearTimeout(self.timeouttimer);
+                    }
+
                     //Stop the timer to avoid a new repetitive message sent before processing
-                    if (self.timer){
-                        clearInterval(self.timer);
+                    if (self.repeattimer){
+                        clearInterval(self.repeattimer);
                     }
                     //Store the value
                     self.valuesAdd(id, val);
@@ -268,6 +279,10 @@ module.exports = function (RED) {
                 self.basepayload = msg.payload;
                 self.inputreceived = true;
 
+                //Stop possible delay timer
+                if (self.timeouttimer){
+                    clearTimeout(self.timeouttimer);
+                }
                 //Start assessment
                 self.assessRules();
             });
