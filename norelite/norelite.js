@@ -245,6 +245,13 @@ module.exports = function (RED) {
         /* Register a listner if the node has an input */
         if (self.inputson){
             self.on("input", function(msg){
+                //Validate input
+                var validate = common.validatePayload(msg.payload);
+                if (!validate.valid){
+                    self.warn(validate.error);
+                    return;
+                }
+
                 //Set the new basepayload to be used in this rule
                 self.basepayload = msg.payload;
                 self.inputreceived = true;

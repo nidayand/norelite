@@ -1,11 +1,20 @@
-module.exports = {
-    /**
-     * Will set the status for a node.
-     * @param {Object} node  The node to set the status for
-     * @param {Number} type  -1/red, 0/yellow, 1/green
-     * @param {String} value The Text to be displayed
-     */
-    setStatus: function (node, type, value) {
+
+var validateInPayload = function(payload){
+    if (typeof payload != "object") return {valid: false, error: "Not an object"};
+    if (typeof payload.lid == undefined || typeof payload.status == undefined || typeof payload.value == undefined || typeof payload.type == undefined) return {valid: false, error: "Missing mandatory variables"};
+    if (typeof payload.status != "number") return {valid: false, error: "Status is not a number"};
+    if (typeof payload.value != "number" || !(payload.value <= 100 && payload.value >= 0) || (payload.value % 1 != 0)) return {valid: false, error:"Value is not a valid integer value between 0-100"};
+    if (typeof payload.type != "string" || !(payload.type === "rule" || payload.type == "direct" || payload.type == "scenario")) return {valid: false, error:"Type is not rule/scenario/direct"};
+    return {valid: true, error: undefined};
+}
+
+/**
+ * Will set the status for a node.
+ * @param {Object} node  The node to set the status for
+ * @param {Number} type  -1/red, 0/yellow, 1/green
+ * @param {String} value The Text to be displayed
+ */
+var setTextStatus = function (node, type, value) {
         if (type == undefined){
             value="Initializing";
             type = 0;
@@ -42,5 +51,9 @@ module.exports = {
             });
             break;
         }
-    }
+}
+
+module.exports = {
+    setStatus: setTextStatus,
+    validatePayload: validateInPayload
 }
