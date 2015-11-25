@@ -124,20 +124,23 @@ module.exports = function (RED) {
 
         //Keeps track if an input msg has been received
         self.inputreceived = false;
-        self.inputsOn = n.inputson;
+        self.inputson = n.inputson;
 
         //Set the base msg payload. Can be modified if the rule has an input
         self.basepayload = { lid : self.id, type: "rule", status : 1, value:100};
 
         //Functions to work with the values store (keeps updates from the sources)
         self.valuesAdd = function(id, val){
-            var found = _.find(self.values, function(obj){return obj.id == id});
-            if (found === undefined){
+            var found = _.findIndex(self.values, function(obj){return obj.id == id});
+            if (found === -1){
                 self.values.push({id : id, value: val});
+            } else {
+                self.values[found]= {id : id, value: val};
             }
         }
         self.valueGet = function(id){
-            return _.find(self.values, function(obj){return obj.id == id});
+            var found = _.find(self.values, function(obj){return obj.id == id});
+            return (found != undefined ? found.value : undefined);
         }
 
         common.setStatus(this);
@@ -156,7 +159,6 @@ module.exports = function (RED) {
 
         //Assessment of all rules
         self.assessRules = function(){
-
             //Validate the rules
             var numbersTrue = 0; //Counter for number of rules that are true
             _.each(self.rules, function(rule){
@@ -170,12 +172,13 @@ module.exports = function (RED) {
                     }
                 }
             })
-
             //Create the message
             var msg = {};
-            msg.payload = self.basepayload;
-            if (numbersTrue === self.rules.length || (numbersTrue > 0 && !self.checkAll)){
-                if (!self.inputsOn){
+            //Copy payload (do not reference!)
+            msg.payload = JSON.parse(JSON.stringify(self.basepayload));
+
+            if (numbersTrue === self.rules.length || (numbersTrue > 0 && !self.checkall)){
+                if (!self.inputson){
                     msg.payload.status = 1;
 
                     common.setStatus(self, 1, "Active "+numbersTrue+"/"+self.rules.length);
@@ -190,12 +193,12 @@ module.exports = function (RED) {
                         msg.payload.status = 0;
 
                         //Show that the rule is inactive
-                        common.setStatus(self, -1, "Missing received message "+numbersTrue+"/"+self.rules.length);
+                        common.setStatus(self, -1, "Missing input "+numbersTrue+"/"+self.rules.length);
                     }
                 }
             } else {
                 msg.payload.status = 0;
-                common.setStatus(node, -1, "Inactive "+numbersTrue+"/"+self.rules.length);
+                common.setStatus(self, -1, "Inactive "+numbersTrue+"/"+self.rules.length);
             }
 
 
@@ -245,6 +248,9 @@ module.exports = function (RED) {
                 //Set the new basepayload to be used in this rule
                 self.basepayload = msg.payload;
                 self.inputreceived = true;
+
+                //Start assessment
+                self.assessRules();
             });
         }
 
