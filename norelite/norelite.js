@@ -207,8 +207,17 @@ module.exports = function (RED) {
                 //Set the correct id
                 msg.payload.lid = self.id;
 
-                //Node does not have an input
+                //Send the message
                 self.send(msg);
+
+                //Setup repeat every 1min
+                if (self.timer){
+                    clearInterval(self.timer);
+                }
+                //Only setup repeat for top eval node
+                if (!self.inputson){
+                    self.timer = setInterval(self.assessRules, 60*1000);
+                }
             }
 
         }
@@ -229,6 +238,10 @@ module.exports = function (RED) {
             //Setup the listener for the event to re-evaluate the rules
             _.each(list, function(id){
                 self.configNode.onConfig(id, function(val){
+                    //Stop the timer to avoid a new repetitive message sent before processing
+                    if (self.timer){
+                        clearInterval(self.timer);
+                    }
                     //Store the value
                     self.valuesAdd(id, val);
                     self.log("Source data received: "+id+" / "+val);
@@ -251,7 +264,6 @@ module.exports = function (RED) {
                     self.warn(validate.error);
                     return;
                 }
-
                 //Set the new basepayload to be used in this rule
                 self.basepayload = msg.payload;
                 self.inputreceived = true;
