@@ -179,6 +179,9 @@ module.exports = function (RED) {
                     //Validate the rules
                     if(operators[rule.t](val,rule.v, rule.v2)){
                         numbersTrue++;
+                        self.log("Rule ("+self.name+") is TRUE: "+val+" "+rule.t+" "+rule.v);
+                    } else {
+                        self.log("Rule ("+self.name+") is FALSE: "+val+" "+rule.t+" "+rule.v);
                     }
                 }
             })
