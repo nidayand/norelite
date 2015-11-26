@@ -5,11 +5,10 @@ A set of [Node-Red](http://nodered.org/) nodes to ease the implementation of you
 
 Install
 -------
-Norelite is currently in an **early testing** phase with the basic nodes and when it will pass it will be registered as an npm module. But for now, go to your Node-Red nodes directory, download the repo and run npm install to install its dependencies.
+Use npm to install norelite in the Node-RED data directory.
 
-    git clone https://github.com/nidayand/norelite.git
-    cd norelite
-    npm install
+    cd $HOME/.node-red
+    npm install norelite
 
 Get started
 -----------
