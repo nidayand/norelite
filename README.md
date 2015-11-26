@@ -70,3 +70,12 @@ All nodes except for `nrl-source` expects a certain format of msg.payload. If an
 	 - direct = message is based on a direct setting and has precedence over a scenario and rule
 		 - Can be used to turn off/on specific lights and override scenario and rules
 	 - value = 0 to 100 to be able to dim a light.
+
+**NOTE: Every node within an norelite flow needs to always pass the message further. If the message is not a valid one/active just set status = 0**
+
+A simple example of a custom node in an norelite flow using the `function` node:
+
+    if (msg.payload.value > 10){
+    	msg.payload.status = 0;
+    } 
+    return msg;
