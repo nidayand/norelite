@@ -1,21 +1,21 @@
 {
-    "name": "norelite",
-    "version": "0.1.2",
-    "description": "A set of node-red nodes to build persistent home automation management",
-    "author": {
-        "name": "nidayand",
-        "email": "pggithub@gothager.se"
-    },
-    "dependencies": {
-        "underscore": "^1.8.3",
-        "when": "^3.7.5"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/nidayand/norelite.git"
-    },
-    "license": "Apache-2.0",
-    "keywords": [
+  "name": "norelite",
+  "version": "0.2.0",
+  "description": "A set of node-red nodes to build persistent home automation management",
+  "author": {
+    "name": "nidayand",
+    "email": "pggithub@gothager.se"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "when": "^3.7.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidayand/norelite.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
     "node-red",
     "rfxcom",
     "RFXtrx433",
@@ -26,16 +26,16 @@
     "control",
     "tellstick"
   ],
-    "node-red": {
-        "nodes": {
-            "nrl-eval in": "norelite.js",
-            "nrl-source out": "norelite.js",
-            "nrl-switch out": "norelite.js",
-            "nrl-dayslimit in": "nrl-util.js",
-            "nrl-rfxcom-out": "nrl-rfxcom.js",
-            "nrl-tellstick-out": "nrl-tellstick.js",
-            "nrl-timelimit in": "nrl-util.js",
-            "nrl-value in": "nrl-util.js"
-        }
+  "node-red": {
+    "nodes": {
+      "nrl-eval in": "norelite.js",
+      "nrl-source out": "norelite.js",
+      "nrl-switch out": "norelite.js",
+      "nrl-dayslimit in": "nrl-util.js",
+      "nrl-rfxcom-out": "nrl-rfxcom.js",
+      "nrl-tellstick-out": "nrl-tellstick.js",
+      "nrl-timelimit in": "nrl-util.js",
+      "nrl-value in": "nrl-util.js"
     }
+  }
 }
