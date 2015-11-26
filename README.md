@@ -1,11 +1,11 @@
-norelight
+norelite
 =========
 A set of [Node-Red](http://nodered.org/) nodes to ease the implementation of your home automation requirements.
 ![Overview example image](https://cloud.githubusercontent.com/assets/2181965/11427421/05e089e8-9463-11e5-932f-1d8b9413bfaa.jpg)
 
 Install
 -------
-Norelite is currently in **early testing** with the basic nodes and when passed it will be registered in npm. But for now, go to your Node-Red nodes directory, download the repo and run npm install to install its dependencies.
+Norelite is currently in an **early testing** phase with the basic nodes and when it will pass it will be registered as an npm module. But for now, go to your Node-Red nodes directory, download the repo and run npm install to install its dependencies.
 
     git clone https://github.com/nidayand/norelite.git
     cd norelite
@@ -17,8 +17,8 @@ Get started
  1. Setup a set of `nrl-source` nodes that takes some input data
  2. Define a `nrl-eval` node that will evaluate some of the `nrl-source` nodes
  3. Take the output from the `nrl-eval` node and link it to an `nrl-switch` node
- 4. Link the `nrl-switch` node to `nlr-rfxcom`
- 5. Link `nlr-rfxcom` to a [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) node
+ 4. Link the `nrl-switch` node to `nlr-rfxcom` or `nlr-tellstick` and config the nodes with code or device id
+ 5. Link `nlr-rfxcom` to a [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) node if you are using an rfxtrx433 transceiver or from `nlr-tellstick` to a [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) node if you have a Tellstick
  6. Done!
 
 Usage
@@ -49,16 +49,21 @@ The switch node can take **multiple inputs** and store the received messages for
 ### nrl-rfxcom node
 The rfxcom node is a node to be used with [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom). It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) who will send the instructions to the connected hardware.
 
+### nrl-tellstick node
+**NOTE: Not tested with an hardware device**
+The tellstick node is a node to be used with [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) . It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) who will send the instructions to the connected hardware.
+
 Next on the to do list
 -----
 
- - Simplify hysteresis of source values
- - Manages a source value evaluation needs to have been "true" for a certain amount of time 
- - Supporting scenario nodes
+ - Improve the node documentation
+ - Hysteresis of source values
+ - Manage a source value evaluation that needs to have been "true" for a certain amount of time 
+ - Support scenario nodes
 
 Custom nodes
 ------------
-All nodes except for `nrl-source` expects a certain format of msg.payload. If any custom node is used in between norelite nodes the payload needs to have the following structure:
+All nodes except for `nrl-source` expects a certain format of `msg.payload`. If any custom node is used in between norelite nodes the payload needs to have the following structure:
 
     {
     	lid: "identifier",
