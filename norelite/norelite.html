@@ -1,7 +1,7 @@
 <!-- *********************************************
     configuration node
      ********************************************* -->
-<script type="text/x-red" data-template-name="norelite-config">
+<script type="text/x-red" data-template-name="nrl-config">
     <div class="form-row">
         <label for="node-config-input-delay"><i class="fa fa-clock-o"></i> Rule send delay</label>
         <input type="text" id="node-config-input-delay" style="direction:rtl; width:50px !important"> seconds
@@ -12,7 +12,7 @@
     </div>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('norelite-config', {
+    RED.nodes.registerType('nrl-config', {
         category: 'config',
         color: "rgb(218, 196, 180)",
         defaults: {
@@ -28,7 +28,7 @@
 <!-- *********************************************
     source node
      ********************************************* -->
-<script type="text/x-red" data-template-name="norelite-source out">
+<script type="text/x-red" data-template-name="nrl-source out">
     <div class="form-row">
         <label for="node-input-config"><i class="fa fa-bookmark"></i> Config</label>
         <input type="text" id="node-input-config">
@@ -66,7 +66,7 @@
     </div>
 
 </script>
-<script type="text/x-red" data-help-name="norelite-source out">
+<script type="text/x-red" data-help-name="nrl-source out">
     <p>A source definition node. Will store the current value of the datasource</p>
     <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
     <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Norelite nodes. When defining enter a prepend string to be used to uniquely identify Norelite messages</p>
@@ -83,11 +83,11 @@
         });
 
     }
-    RED.nodes.registerType('norelite-source out', {
+    RED.nodes.registerType('nrl-source out', {
         category: 'norelite-output',
         color: "#C7E9C0",
         defaults: {
-            config: {type: "norelite-config", required: true},
+            config: {type: "nrl-config", required: true},
             name: {value: "", required: true},
             expire: {value: false, required: true},
             timeout: {value: 100, required: false, validate: RED.validators.number()},
@@ -117,7 +117,7 @@
 <!-- *********************************************
     evaluation node
      ********************************************* -->
-<script type="text/x-red" data-template-name="norelite-eval in">
+<script type="text/x-red" data-template-name="nrl-eval in">
     <div class="form-row">
         <label for="node-input-config"><i class="fa fa-bookmark"></i> Config</label>
         <input type="text" id="node-input-config">
@@ -146,7 +146,7 @@
         <input type="text" id="node-input-name" placeholder="Name">
     </div>
 </script>
-<script type="text/x-red" data-help-name="norelite-eval in">
+<script type="text/x-red" data-help-name="nrl-eval in">
     <p>One of the key nodes in Norelite. It triggers on changes in sources and evaluate sources according to criterias and outputs a message that includes if the status is active or not active</p>
     <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Norelite nodes. When defining enter a prepend string to be used to uniquely identify Norelite messages</p>
     <p>If <b>Use input</b> is active then inbound message will be used to forward with the status unchanged if the rule is true or status = 0 if the rule is false. The "value" will not be changed from the inbound message.</p>
@@ -158,11 +158,11 @@
     </ul>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('norelite-eval in', {
+    RED.nodes.registerType('nrl-eval in', {
         color: "#E2D96E",
         category: 'norelite-input',
         defaults: {
-            config: {type: "norelite-config", required: true},
+            config: {type: "nrl-config", required: true},
             name: {value:""},
             rules: {value:[{t:"eq", v:""}]},
             checkall: {value:"true", required:true},
@@ -194,7 +194,7 @@
             //get all conf nodes
             var sourceAllList = [];
             RED.nodes.eachNode(function(cf){
-                if (cf.type==="norelite-source out"){
+                if (cf.type==="nrl-source out"){
                     sourceAllList.push(cf);
                 }
             });
@@ -328,7 +328,7 @@
 <!-- *********************************************
     switch node
      ********************************************* -->
-<script type="text/x-red" data-template-name="norelite-switch-config">
+<script type="text/x-red" data-template-name="nrl-switch-config">
     <div class="form-row">
         <label for="node-config-input-times"><i class="fa fa-clock-o"></i> Repeat send</label>
         <input type="text" id="node-config-input-times" style="direction:rtl; width:50px !important">
@@ -339,7 +339,7 @@
     </div>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('norelite-switch-config', {
+    RED.nodes.registerType('nrl-switch-config', {
         category: 'config',
         color: "rgb(218, 196, 180)",
         defaults: {
@@ -351,7 +351,7 @@
         }
     });
 </script>
-<script type="text/x-red" data-template-name="norelite-switch out">
+<script type="text/x-red" data-template-name="nrl-switch out">
     <div class="form-row">
         <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Send code</label>
         <input type="text" id="node-input-times" placeholder="Number" style="direction:rtl; width:50px !important">
@@ -374,7 +374,7 @@
     </div>
 
 </script>
-<script type="text/x-red" data-help-name="norelite-switch out">
+<script type="text/x-red" data-help-name="nrl-switch out">
     <p>A switch node will take several inputs and based on the type and status of those messages send an instruction out to turn on or off the switch</p>
     <p>The following variables are required to <b>msg.payload</b>:
     <ul>
@@ -390,12 +390,12 @@
     <p>The output message will only have one integer value in the output where a valid <b>value is 0 (off) to 100 (%dim value)</b></p>
 </script>
 <script type="text/javascript">
-    RED.nodes.registerType('norelite-switch out', {
+    RED.nodes.registerType('nrl-switch out', {
         category: 'norelite-output',
         color: "#D7D7A0",
         defaults: {
             name: {value: "", required: true},
-            times: {type: "norelite-switch-config", required: true},
+            times: {type: "nrl-switch-config", required: true},
             repeat: {value: 10, required: true, validate: RED.validators.number()},
             repeatUnits: {value: "minutes", required: false}
         },

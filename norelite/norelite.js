@@ -15,7 +15,7 @@ module.exports = function (RED) {
         this.delay = n.delay;
         this.initialised = false;
     }
-    RED.nodes.registerType("norelite-config", NoreliteConfig);
+    RED.nodes.registerType("nrl-config", NoreliteConfig);
 
     NoreliteConfig.prototype.initialise = function () {
         if (this.initialised) {
@@ -101,7 +101,7 @@ module.exports = function (RED) {
 
         });
     }
-    RED.nodes.registerType("norelite-source out", NoreliteSource);
+    RED.nodes.registerType("nrl-source out", NoreliteSource);
 
     /*******************************************
     Evaluation node
@@ -296,7 +296,7 @@ module.exports = function (RED) {
         }
 
     }
-    RED.nodes.registerType("norelite-eval in", NoreliteEval);
+    RED.nodes.registerType("nrl-eval in", NoreliteEval);
 
     /*******************************************
     Switch node and config
@@ -306,7 +306,7 @@ module.exports = function (RED) {
         this.name = n.name;
         this.times = n.times;
     }
-    RED.nodes.registerType("norelite-switch-config", NoreliteSwitchConfig);
+    RED.nodes.registerType("nrl-switch-config", NoreliteSwitchConfig);
     function NoreliteSwitch(n) {
         RED.nodes.createNode(this, n);
         this.times = RED.nodes.getNode(n.times).times;
@@ -507,5 +507,5 @@ module.exports = function (RED) {
         });
 
     }
-     RED.nodes.registerType("norelite-switch out", NoreliteSwitch);
+     RED.nodes.registerType("nrl-switch out", NoreliteSwitch);
 }
