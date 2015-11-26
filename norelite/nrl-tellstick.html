@@ -1,0 +1,33 @@
+
+<!-- HTML -->
+<script type="text/x-red" data-template-name="nrl-tellstick-out">
+    <div class="form-row">
+        <label for="node-input-code"><i class="fa fa-bookmark"></i> Device Id</label>
+        <input type="text" id="node-input-code">
+    </div>
+    <div class="form-row">
+        <label for="node-input-code"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="nrl-tellstick-out">
+    <p>The node will convert the Norelite payload into a format that is applicable for the <a href="https://github.com/emiloberg/node-red-contrib-tellstick">node-red-contrib-tellstick</a> input format. Use the node just before the output node from <a href="https://github.com/emiloberg/node-red-contrib-tellstick">node-red-contrib-tellstick</a>.</p>
+    <p>Enter the switch unit device id in <b>Device Id</b> field and a name for the display</p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('nrl-tellstick-out', {
+        category: 'norelite-output',
+        color: "#A6BBCF",
+        defaults: {
+            name: {value: "", required: true},
+            code: {value: 1, required: true, validate: RED.validators.number()},
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "fa-compress.png",
+        align: "right",
+        label: function() {
+            return (this.name || "undefined");
+        }
+    });
+</script>
