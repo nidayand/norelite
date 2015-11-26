@@ -5,7 +5,7 @@ A set of [Node-Red](http://nodered.org/) nodes to ease defining rules to manage 
 
 Install
 -------
-Norelite is currently in early testing with the basic nodes and when passed it will be registered in npm. But for now, go to your Node-Red nodes directory, download the repo and run npm install to install its dependencies.
+Norelite is currently in **early testing** with the basic nodes and when passed it will be registered in npm. But for now, go to your Node-Red nodes directory, download the repo and run npm install to install its dependencies.
 
     git clone https://github.com/nidayand/norelite.git
     cd norelite
