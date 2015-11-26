@@ -426,6 +426,7 @@ module.exports = function (RED) {
                         }
                     }//if rule
                     if (out_msg.type === "none") {
+                        out_msg.type = "rule";
                         self.activeId = "none";
                     }
                 });
