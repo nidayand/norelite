@@ -16,6 +16,13 @@ module.exports = function (RED) {
 
         /* When a message is received */
         node.on("input", function(msg){
+            //Validate input
+            var validate = common.validatePayload(msg.payload);
+            if (!validate.valid){
+                node.warn(validate.error);
+                return;
+            }
+
             var nmsg = {};
             nmsg.topic = node.code;
 
