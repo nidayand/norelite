@@ -11,7 +11,6 @@ module.exports = function (RED) {
     ********************************************/
     function NoreliteConfig(n) {
         RED.nodes.createNode(this, n);
-        this.config = n.config;
         this.name = n.name;
         this.delay = n.delay;
         this.initialised = false;
@@ -299,8 +298,14 @@ module.exports = function (RED) {
     RED.nodes.registerType("norelite-eval in", NoreliteEval);
 
     /*******************************************
-    Switch node
+    Switch node and config
     *******************************************/
+    function NoreliteSwitchConfig(n) {
+        RED.nodes.createNode(this, n);
+        this.name = n.name;
+        this.times = n.times;
+    }
+    RED.nodes.registerType("norelite-switch-config", NoreliteSwitchConfig);
     function NoreliteSwitch(n) {
         RED.nodes.createNode(this, n);
         this.times = RED.nodes.getNode(n.times).times;
