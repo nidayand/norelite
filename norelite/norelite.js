@@ -310,6 +310,8 @@ module.exports = function (RED) {
         RED.nodes.createNode(this, n);
         this.times = RED.nodes.getNode(n.times).times;
         this.name = n.name;
+        this.timer = null;
+        var self = this;
 
         //timeout
         if (n.repeatUnits === "milliseconds") {
@@ -323,8 +325,6 @@ module.exports = function (RED) {
         } else if (n.repeatUnits === "days") {
             this.repeat = n.repeat * 1000 * 60 * 60 * 24;
         }
-        this.timer = null;
-        var self = this;
         //Set init status message
         common.setStatus(self);
 
@@ -332,7 +332,20 @@ module.exports = function (RED) {
         Sturcture of incoming messages
         { lid: xyz, status: 0/1, value:0-100, type: "rule"/"scenario"/"direct"}
         */
-        self.allIds = [];
+        self.allIds = []; //Keeps a list of all payloads
+        //Functions to work with the values store (keeps updates from the sources)
+        self.allIdsAdd = function(payload){
+            var found = _.findIndex(self.allIds, function(obj){return obj.lid == payload.lid});
+            if (found === -1){
+                self.allIds.push(payload);
+            } else {
+                self.allIds[found]= payload;
+            }
+        }
+        self.allIdsGet = function(id){
+            var found = _.find(self.allIds, function(obj){return obj.lid == payload.lid});
+            return (found != undefined ? found : undefined);
+        }
         self.activeId; //Keeps the active id of receiving message
         self.prevMsg; //Keeps store of the last sent out msg
 
@@ -340,84 +353,84 @@ module.exports = function (RED) {
         /* Method to create output message */
         //Validate function of what the output msg should look like
         self.getOutputMsg = function () {
-                var ids = node.allIds;
-                var id = node.id;
+                var id = self.id;
                 var sendit = false;
 
-                var omsg = {
+                var out_msg = {
                     lid: id,
                     status: 0,
                     value: 0,
                     type: "none"
                 };
-                for (var i = 0; i < ids.length; i++) {
-                    /* precense of type: rule < scenario < direct */
-                    if (ids[i].type === "direct") {
+
+                _.each(self.allIds, function(cid){
+                    if (cid.type === "direct"){
+                        if (cid.status){
+                            out_msg.status = 1;
+                        }
+
+                        //Reset value if type is changed
+                        if (out_msg.type !== "direct"){
+                            out_msg.value = cid.value;
+                            self.activeId = cid.lid;
+                        }
+
+                        //Set the type
+                        out_msg.type = cid.type;
+
+                        //Aways use the highest value
+                        if (cid.value > out_msg.value){
+                            out_msg.value = cid.value;
+                            self.activeId = cid.lid;
+                        }
+                    }//if direct
+
+                    if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
                         /* If the input is active */
-                        if (ids[i].status === 1) {
-                            omsg.status = 1;
+                        if (cid.status === 1) {
+                            out_msg.status = 1;
 
                             /* Reset value if the type is changed */
-                            if (omsg.type !== "direct") {
-                                omsg.value = ids[i].value;
-                                self.activeId = ids[i].lid;
+                            if (out_msg.type === "rule") {
+                                out_msg.value = cid.value;
+                                self.activeId = cid.lid;
                             }
 
                             //Set the active type
-                            omsg.type = ids[i].type;
+                            out_.type = cid.type;
 
                             //Always use the highest value
-                            if (ids[i].value > omsg.value) {
-                                omsg.value = ids[i].value;
+                            if (cid.value > out_msg.value) {
+                                out_msg.value = cid.value;
                                 /*Set the active id*/
-                                self.activeId = ids[i].lid;
+                                self.activeId = cid.lid;
                             }
                         }
+                    }//if scenario
 
-                    } else if (ids[i].type === "scenario" && (omsg.type === "rule" || omsg.type === "none" || omsg.type === "scenario")) {
+                    if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
                         /* If the input is active */
-                        if (ids[i].status === 1) {
-                            omsg.status = 1;
-
-                            /* Reset value if the type is changed */
-                            if (omsg.type === "rule") {
-                                omsg.value = ids[i].value;
-                                self.activeId = ids[i].lid;
-                            }
+                        if (cid.status === 1) {
+                            out_msg.status = 1;
 
                             //Set the active type
-                            omsg.type = ids[i].type;
+                            out_msg.type = cid.type;
 
                             //Always use the highest value
-                            if (ids[i].value > omsg.value) {
-                                omsg.value = ids[i].value;
+                            if (cid.value > out_msg.value) {
+                                out_msg.value = cid.value;
                                 /*Set the active id*/
-                                self.activeId = ids[i].lid;
+                                self.activeId = cid.lid;
                             }
                         }
-
-                    } else if (ids[i].type === "rule" && (omsg.type === "rule" || omsg.type === "none")) {
-                        /* If the input is active */
-                        if (ids[i].status === 1) {
-                            omsg.status = 1;
-
-                            //Set the active type
-                            omsg.type = ids[i].type;
-
-                            //Always use the highest value
-                            if (ids[i].value > omsg.value) {
-                                omsg.value = ids[i].value;
-                                /*Set the active id*/
-                                self.activeId = ids[i].lid;
-                            }
-                        }
-                    }
-                    if (omsg.type === "none") {
+                    }//if rule
+                    if (out_msg.type === "none") {
                         self.activeId = "none";
                     }
-                }
-                return omsg;
-            } //getOutputMsg
+                });
+
+            return out_msg;
+        } //getOutputMsg
 
         /* Send the message */
 
@@ -432,7 +445,7 @@ module.exports = function (RED) {
                 };
 
                 /* Send the message the specified number of times */
-                if (prevActiveId == undefined || prevActiveId != node.activeId || repeatCall) {
+                if (prevActiveId == undefined || prevActiveId != self.activeId || repeatCall) {
                     /* Clear timer if it is not a repeatCall (called from timer) */
                     clearTimeout(self.timer);
 
@@ -441,9 +454,8 @@ module.exports = function (RED) {
                         (self.prevMsg.payload.status != msg.payload.status || self.prevMsg.payload.value != msg.payload.value) ||
                         repeatCall){
 
-                        for (var i = 0; i < node.times; i++) {
+                        for (var i = 0; i < self.times; i++) {
                             setTimeout( function(){ self.send(msg); }, 100*(i+1));
-                            //node.send(msg);
                         }
                         //Save current message for review next time the method is called
                         self.prevMsg = msg;
@@ -468,39 +480,15 @@ module.exports = function (RED) {
         /* On received messages */
         self.receiveTimeout;
         self.on("input", function (msg) {
-            //Validate inbound message
-            var errMsg = "";
-            if (msg.payload.lid == undefined) {
-                errMsg += "lid is missing in msg.payload\n";
-            }
-            if (msg.payload.status == undefined) {
-                errMsg += "status is missing in msg.payload\n";
-            }
-            if (msg.payload.value == undefined) {
-                errMsg += "value is missing in msg.payload\n";
-            }
-            if (msg.payload.type == undefined) {
-                errMsg += "type is missing in msg.payload\n";
-            }
-            if (errMsg !== "") {
-                self.error(errMsg);
+            //Validate input
+            var validate = common.validatePayload(msg.payload);
+            if (!validate.valid){
+                self.warn(validate.error);
                 return;
             }
-            //Check if linkid already is in allIds array
-            var lid = null;
-            for (var i = 0; i < self.allIds.length; i++) {
-                if (msg.payload.lid === self.allIds[i].lid) {
-                    lid = i;
-                    break;
-                }
-            }
 
-            //Add or update entry in array
-            if (lid !== null) {
-                self.allIds[lid] = msg.payload;
-            } else {
-                self.allIds.push(msg.payload);
-            }
+            //Add to local array used for validation on out message
+            self.allIdsAdd(msg.payload);
 
             /* Set a small delay to prevent unnecessary processing before actually all messages
             have been received. E.g. when starting for the first time */
