@@ -11,6 +11,16 @@ Norelite is currently in **early testing** with the basic nodes and when passed 
     cd norelite
     npm install
 
+Get started
+-----------
+
+ 1. Setup a set of `nrl-source` nodes that takes some input data
+ 2. Define a `nrl-eval` node that will evaluate some of the `nrl-source` nodes
+ 3. Take the output from the `nrl-eval` node and link it to an `nrl-switch` node
+ 4. Link the `nrl-switch` node to `nlr-rfxcom`
+ 5. Link `nlr-rfxcom` to a [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) node
+ 6. Done!
+
 Usage
 -----
 ### nrl-source node
