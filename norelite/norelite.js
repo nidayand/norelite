@@ -297,4 +297,221 @@ module.exports = function (RED) {
 
     }
     RED.nodes.registerType("norelite-eval in", NoreliteEval);
+
+    /*******************************************
+    Switch node
+    *******************************************/
+    function NoreliteSwitch(n) {
+        RED.nodes.createNode(this, n);
+        this.times = RED.nodes.getNode(n.times).times;
+        this.name = n.name;
+
+        //timeout
+        if (n.repeatUnits === "milliseconds") {
+            this.repeat = n.repeat;
+        } else if (n.repeatUnits === "seconds") {
+            this.repeat = n.repeat * 1000;
+        } else if (n.repeatUnits === "minutes") {
+            this.repeat = n.repeat * 1000 * 60;
+        } else if (n.repeatUnits === "hours") {
+            this.repeat = n.repeat * 1000 * 60 * 60;
+        } else if (n.repeatUnits === "days") {
+            this.repeat = n.repeat * 1000 * 60 * 60 * 24;
+        }
+        this.timer = null;
+        var self = this;
+        //Set init status message
+        common.setStatus(self);
+
+        /* Holds messages from all different linkIds
+        Sturcture of incoming messages
+        { lid: xyz, status: 0/1, value:0-100, type: "rule"/"scenario"/"direct"}
+        */
+        self.allIds = [];
+        self.activeId; //Keeps the active id of receiving message
+        self.prevMsg; //Keeps store of the last sent out msg
+
+
+        /* Method to create output message */
+        //Validate function of what the output msg should look like
+        self.getOutputMsg = function () {
+                var ids = node.allIds;
+                var id = node.id;
+                var sendit = false;
+
+                var omsg = {
+                    lid: id,
+                    status: 0,
+                    value: 0,
+                    type: "none"
+                };
+                for (var i = 0; i < ids.length; i++) {
+                    /* precense of type: rule < scenario < direct */
+                    if (ids[i].type === "direct") {
+                        /* If the input is active */
+                        if (ids[i].status === 1) {
+                            omsg.status = 1;
+
+                            /* Reset value if the type is changed */
+                            if (omsg.type !== "direct") {
+                                omsg.value = ids[i].value;
+                                self.activeId = ids[i].lid;
+                            }
+
+                            //Set the active type
+                            omsg.type = ids[i].type;
+
+                            //Always use the highest value
+                            if (ids[i].value > omsg.value) {
+                                omsg.value = ids[i].value;
+                                /*Set the active id*/
+                                self.activeId = ids[i].lid;
+                            }
+                        }
+
+                    } else if (ids[i].type === "scenario" && (omsg.type === "rule" || omsg.type === "none" || omsg.type === "scenario")) {
+                        /* If the input is active */
+                        if (ids[i].status === 1) {
+                            omsg.status = 1;
+
+                            /* Reset value if the type is changed */
+                            if (omsg.type === "rule") {
+                                omsg.value = ids[i].value;
+                                self.activeId = ids[i].lid;
+                            }
+
+                            //Set the active type
+                            omsg.type = ids[i].type;
+
+                            //Always use the highest value
+                            if (ids[i].value > omsg.value) {
+                                omsg.value = ids[i].value;
+                                /*Set the active id*/
+                                self.activeId = ids[i].lid;
+                            }
+                        }
+
+                    } else if (ids[i].type === "rule" && (omsg.type === "rule" || omsg.type === "none")) {
+                        /* If the input is active */
+                        if (ids[i].status === 1) {
+                            omsg.status = 1;
+
+                            //Set the active type
+                            omsg.type = ids[i].type;
+
+                            //Always use the highest value
+                            if (ids[i].value > omsg.value) {
+                                omsg.value = ids[i].value;
+                                /*Set the active id*/
+                                self.activeId = ids[i].lid;
+                            }
+                        }
+                    }
+                    if (omsg.type === "none") {
+                        self.activeId = "none";
+                    }
+                }
+                return omsg;
+            } //getOutputMsg
+
+        /* Send the message */
+
+        self.sendMsg = function (repeatCall) {
+            //Save prev id that is active
+            var prevActiveId = self.activeId;
+
+            if (self.allIds.length > 0) {
+                var output = self.getOutputMsg();
+                var msg = {
+                    payload: output
+                };
+
+                /* Send the message the specified number of times */
+                if (prevActiveId == undefined || prevActiveId != node.activeId || repeatCall) {
+                    /* Clear timer if it is not a repeatCall (called from timer) */
+                    clearTimeout(self.timer);
+
+                    //Check if status and value has changed from prev
+                    if (self.prevMsg == undefined ||
+                        (self.prevMsg.payload.status != msg.payload.status || self.prevMsg.payload.value != msg.payload.value) ||
+                        repeatCall){
+
+                        for (var i = 0; i < node.times; i++) {
+                            setTimeout( function(){ self.send(msg); }, 100*(i+1));
+                            //node.send(msg);
+                        }
+                        //Save current message for review next time the method is called
+                        self.prevMsg = msg;
+                    }
+
+                    /* Set timer repeat function*/
+                    self.timer = setTimeout(function () {
+                            self.sendMsg(true)
+                        }, self.repeat);
+                }
+
+                //Set status message
+                var state = 1;
+                if (msg.payload.state === 0 || msg.payload.value === 0) {
+                    state = -1;
+                }
+                common.setStatus(self, state, output.type + "/" + output.value + "%");
+            }
+        }
+
+
+        /* On received messages */
+        self.receiveTimeout;
+        self.on("input", function (msg) {
+            //Validate inbound message
+            var errMsg = "";
+            if (msg.payload.lid == undefined) {
+                errMsg += "lid is missing in msg.payload\n";
+            }
+            if (msg.payload.status == undefined) {
+                errMsg += "status is missing in msg.payload\n";
+            }
+            if (msg.payload.value == undefined) {
+                errMsg += "value is missing in msg.payload\n";
+            }
+            if (msg.payload.type == undefined) {
+                errMsg += "type is missing in msg.payload\n";
+            }
+            if (errMsg !== "") {
+                self.error(errMsg);
+                return;
+            }
+            //Check if linkid already is in allIds array
+            var lid = null;
+            for (var i = 0; i < self.allIds.length; i++) {
+                if (msg.payload.lid === self.allIds[i].lid) {
+                    lid = i;
+                    break;
+                }
+            }
+
+            //Add or update entry in array
+            if (lid !== null) {
+                self.allIds[lid] = msg.payload;
+            } else {
+                self.allIds.push(msg.payload);
+            }
+
+            /* Set a small delay to prevent unnecessary processing before actually all messages
+            have been received. E.g. when starting for the first time */
+            if (self.receiveTimeout){
+                clearTimeout(self.receiveTimeout);
+            }
+            self.receiveTimeout = setTimeout(function(){self.sendMsg();},1000);
+
+        });
+
+        /* When a node is closed */
+        self.on("close", function(){
+            //Tidy up connections etc
+            clearInterval(self.timer);
+        });
+
+    }
+     RED.nodes.registerType("norelite-switch out", NoreliteSwitch);
 }
