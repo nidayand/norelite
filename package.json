@@ -1,35 +1,39 @@
 {
-    "name": "norelite",
-    "version": "0.1.0",
-    "description": "A set of node-red nodes to build persistent home automation management",
-    "author": {
-        "name": "nidayand",
-        "email": "pggithub@gothager.se"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/nidayand/norelite.git"
-    },
-    "license": "Apache-2.0",
-    "keywords": [
+  "name": "norelite",
+  "version": "0.1.0",
+  "description": "A set of node-red nodes to build persistent home automation management",
+  "author": {
+    "name": "nidayand",
+    "email": "pggithub@gothager.se"
+  },
+  "dependencies": {
+    "underscore": "^1.8.3",
+    "when": "^3.7.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nidayand/norelite.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
     "node-red",
     "rfxcom",
     "RFXtrx433",
-      "home",
-      "automation",
-      "mqtt",
-      "light",
-      "control"
+    "home",
+    "automation",
+    "mqtt",
+    "light",
+    "control"
   ],
-    "node-red": {
-        "nodes": {
-            "nrl-source out": "bldatasource.js",
-            "nrl-dayslimit in": "bldayslimit.js",
-            "nrl-eval in": "bleval.js",
-            "nrl-rfxcom-out": "blrfxcom.js",
-            "nrl-switch out": "blswitch.js",
-            "nrl-timelimit in": "bltimelimit.js",
-            "nrl-value in": "blvalue.js"
-        }
+  "node-red": {
+    "nodes": {
+      "nrl-eval in": "norelite.js",
+      "nrl-source out": "norelite.js",
+      "nrl-switch out": "norelite.js",
+      "nrl-dayslimit in": "nrl-util.js",
+      "nrl-rfxcom-out": "nrl-rfxcom.js",
+      "nrl-timelimit in": "nrl-util.js",
+      "nrl-value in": "nrl-util.js"
     }
+  }
 }
