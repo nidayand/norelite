@@ -1,18 +1,18 @@
 /*jslint node: true */
 module.exports = function (RED) {
     "use strict";
-    var blcommon = require('./lib/blcommon');
+    var common = require('./lib/common');
 
 
     /*
         Defines the output node for a rule. Copied to a large extent from 66-mongodb.js
     */
-    function RfxcomOutNode(config) {
+    function NoreliteRfxcomOutNode(config) {
         RED.nodes.createNode(this, config);
         var node = this;
         node.code = config.code;
 
-        blcommon.setStatus(node, 0, "OK");
+        common.setStatus(node);
 
         /* When a message is received */
         node.on("input", function(msg){
@@ -22,13 +22,13 @@ module.exports = function (RED) {
             var val;
             if (msg.payload.status === 1 && msg.payload.value === 100){
                 val = "On";
-                blcommon.setStatus(node, 1, "On");
+                common.setStatus(node, 1, "On");
             } else if (msg.payload.status === 1 && msg.payload.value > 0){
                 val = "level "+(msg.payload.value/100);
-                blcommon.setStatus(node, 1, "On "+msg.payload.value+"%");
+                common.setStatus(node, 1, "On "+msg.payload.value+"%");
             } else {
                 val = "Off";
-                blcommon.setStatus(node, -1, "Off");
+                common.setStatus(node, -1, "Off");
             }
             nmsg.payload = val;
 
@@ -36,5 +36,5 @@ module.exports = function (RED) {
         });
 
     }
-    RED.nodes.registerType("nrl-rfxcom-out", RfxcomOutNode);
+    RED.nodes.registerType("nrl-rfxcom-out", NoreliteRfxcomOutNode);
 };

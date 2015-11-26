@@ -84,7 +84,7 @@
 
     }
     RED.nodes.registerType('norelite-source out', {
-        category: 'norelite2-output',
+        category: 'norelite-output',
         color: "#C7E9C0",
         defaults: {
             config: {type: "norelite-config", required: true},
@@ -160,7 +160,7 @@
 <script type="text/javascript">
     RED.nodes.registerType('norelite-eval in', {
         color: "#E2D96E",
-        category: 'norelite2-input',
+        category: 'norelite-input',
         defaults: {
             config: {type: "norelite-config", required: true},
             name: {value:""},
@@ -391,7 +391,7 @@
 </script>
 <script type="text/javascript">
     RED.nodes.registerType('norelite-switch out', {
-        category: 'norelite2-output',
+        category: 'norelite-output',
         color: "#D7D7A0",
         defaults: {
             name: {value: "", required: true},
