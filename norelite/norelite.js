@@ -6,7 +6,9 @@ module.exports = function (RED) {
     var EventEmitter = require('events').EventEmitter;
     var common = require("./lib/common");
 
-    /* Configuration node */
+    /*******************************************
+    Configuration node
+    ********************************************/
     function NoreliteConfig(n) {
         RED.nodes.createNode(this, n);
         this.config = n.config;
@@ -33,7 +35,9 @@ module.exports = function (RED) {
         this.emitter.emit(type, payload);
     }
 
-    /* Source node */
+    /*******************************************
+    Source node
+    *******************************************/
     function NoreliteSource(n) {
         RED.nodes.createNode(this, n);
         this.configNode = RED.nodes.getNode(n.config);
@@ -84,6 +88,7 @@ module.exports = function (RED) {
                     clearTimeout(self.exptimer);
                 }
                 self.exptimer = setTimeout(function () {
+                    self.log("Input value has expired");
                     self.configNode.emitConfig(self.id, self.expval);
                     if (self.output){
                         self.send({
@@ -98,7 +103,9 @@ module.exports = function (RED) {
     }
     RED.nodes.registerType("norelite-source out", NoreliteSource);
 
-    /* Evaluation node */
+    /*******************************************
+    Evaluation node
+    *******************************************/
     var operators = {
             'eq': function(a, b) { return a == b; },
             'neq': function(a, b) { return a != b; },
