@@ -39,6 +39,13 @@ The switch node can take **multiple inputs** and store the received messages for
 ### nrl-rfxcom node
 The rfxcom node is a node to be used with [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom). It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) who will send the instructions to the connected hardware.
 
+Next on the to do list
+-----
+
+ - Simplify hysteresis of source values
+ - Manages a source value evaluation needs to have been "true" for a certain amount of time 
+ - Supporting scenario nodes
+
 Custom nodes
 ------------
 All nodes except for `nrl-source` expects a certain format of msg.payload. If any custom node is used in between norelite nodes the payload needs to have the following structure:
