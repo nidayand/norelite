@@ -1,6 +1,6 @@
 {
   "name": "norelite",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A set of node-red nodes to build persistent home automation management",
   "author": {
     "name": "nidayand",
