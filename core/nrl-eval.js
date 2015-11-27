@@ -4,7 +4,7 @@ module.exports = function (RED) {
     var when = require('when');
     var _ = require('underscore');
     var EventEmitter = require('events').EventEmitter;
-    var common = require("./lib/common");
+    var common = require("../lib/common");
 
     /*******************************************
     Evaluation node

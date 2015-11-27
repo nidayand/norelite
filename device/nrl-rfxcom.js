@@ -1,7 +1,7 @@
 /*jslint node: true */
 module.exports = function (RED) {
     "use strict";
-    var common = require('./lib/common');
+    var common = require('../lib/common');
 
 
     /*

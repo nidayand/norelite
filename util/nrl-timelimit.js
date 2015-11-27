@@ -3,7 +3,7 @@ module.exports = function (RED) {
 
     var when = require('when');
     var _ = require('underscore');
-    var common = require("./lib/common");
+    var common = require("../lib/common");
 
      /*******************************************
     Time limit node
