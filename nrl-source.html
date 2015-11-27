@@ -1,0 +1,88 @@
+<!-- *********************************************
+    source node
+     ********************************************* -->
+<script type="text/x-red" data-template-name="nrl-source out">
+    <div class="form-row">
+        <label for="node-input-config"><i class="fa fa-bookmark"></i> Config</label>
+        <input type="text" id="node-input-config">
+    </div>
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-expire" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-expire" style="width: 70%;">Value can expire</label>
+    </div>
+    <div id="expire-details">
+        <div class="form-row">
+            <label for="node-input-timeout"><i class="fa fa-clock-o"></i> For</label>
+            <input type="text" id="node-input-timeout" placeholder="Time" style="direction:rtl; width:50px !important">
+            <select id="node-input-timeoutUnits" style="width:200px !important">
+              <option value="milliseconds">Milliseconds</option>
+              <option value="seconds">Seconds</option>
+              <option value="minutes">Minutes</option>
+              <option value="hours">Hours</option>
+              <option value="days">Days</option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="node-input-expval"><i class="fa fa-bookmark"></i> Expiration value</label>
+            <input type="text" id="node-input-expval">
+        </div>
+    </div>
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-output" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-output" style="width: 70%;">Use output</label>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+</script>
+<script type="text/x-red" data-help-name="nrl-source out">
+    <p>A source definition node. Will store the current value of the datasource</p>
+    <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
+    <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Norelite nodes. When defining enter a prepend string to be used to uniquely identify Norelite messages</p>
+    <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
+</script>
+<script type="text/javascript">
+    function oneditprepareDatasource() {
+        $("#node-input-expire").change(function () {
+            if ($("#node-input-expire").is(':checked')){
+                $("#expire-details").show();
+            } else {
+                $("#expire-details").hide();
+            }
+        });
+
+    }
+    RED.nodes.registerType('nrl-source out', {
+        category: 'norelite-output',
+        color: "#C7E9C0",
+        defaults: {
+            config: {type: "nrl-config", required: true},
+            name: {value: "", required: true},
+            expire: {value: false, required: true},
+            timeout: {value: 100, required: false, validate: RED.validators.number()},
+            timeoutUnits: {value: "seconds", required: false},
+            expval : {value: false, required: false},
+            output: {value:false, required:true }
+        },
+        inputs: 1,
+        outputs: 0,
+        icon: "fa-hdd-o.png",
+        align: "right",
+        label: function() {
+            return (this.name || "undefined");
+        },
+        oneditprepare: oneditprepareDatasource,
+        oneditsave: function(){
+            var node=this;
+            if ($("#node-input-output").is(":checked")){
+                node.outputs=1;
+            } else {
+                node.outputs=0;
+            }
+        }
+    });
+</script>

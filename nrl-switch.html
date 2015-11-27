@@ -1,0 +1,83 @@
+<!-- *********************************************
+    switch node
+     ********************************************* -->
+<script type="text/x-red" data-template-name="nrl-switch-config">
+    <div class="form-row">
+        <label for="node-config-input-times"><i class="fa fa-clock-o"></i> Repeat send</label>
+        <input type="text" id="node-config-input-times" style="direction:rtl; width:50px !important">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="Name">
+    </div>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('nrl-switch-config', {
+        category: 'config',
+        color: "rgb(218, 196, 180)",
+        defaults: {
+            times: {value: 3, required: true, validate: RED.validators.number()},
+            name: {value: ""}
+        },
+        label: function () {
+            return this.name || (this.times + " times");
+        }
+    });
+</script>
+<script type="text/x-red" data-template-name="nrl-switch out">
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Send code</label>
+        <input type="text" id="node-input-times" placeholder="Number" style="direction:rtl; width:50px !important">
+        <span>times</span>
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Repeat every</label>
+        <input type="text" id="node-input-repeat" placeholder="Time" style="direction:rtl; width:50px !important">
+        <select id="node-input-repeatUnits" style="width:200px !important">
+          <option value="milliseconds">Milliseconds</option>
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-bookmark"></i> Name</label>
+        <input type="text" id="node-input-name">
+    </div>
+
+</script>
+<script type="text/x-red" data-help-name="nrl-switch out">
+    <p>A switch node will take several inputs and based on the type and status of those messages send an instruction out to turn on or off the switch</p>
+    <p>The following variables are required to <b>msg.payload</b>:
+    <ul>
+        <li><b>lid</b> (text) is an identifier from where the message has come. E.g. the id of the sending node</li>
+        <li><b>status</b> (int) = 0 (not active) or 1 (active)</li>
+        <li><b>value</b> (int) is a value from 0 - 100 where 0 = off and 1-100 is the dim value</li>
+        <li><b>type</b> (text> is "rule", "scenario" or "direct". Where "scenario" has precedence of "rule" and "direct" has precedence of "scenario"</li>
+    </ul>
+    Example msg.payload = { lid: "abc", status: 1, value: 50, type: "scenario"} is a message for an active scenario that has a dim value of 50%
+    </p>
+    <p>The node will assess all incoming messages based on the rules of precedence and output the right message whenever a message has received or on the set <b>repeat</b> value. The outbound message will sent <b>times</b> specified.
+    </p>
+    <p>The output message will only have one integer value in the output where a valid <b>value is 0 (off) to 100 (%dim value)</b></p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('nrl-switch out', {
+        category: 'norelite-output',
+        color: "#D7D7A0",
+        defaults: {
+            name: {value: "", required: true},
+            times: {type: "nrl-switch-config", required: true},
+            repeat: {value: 10, required: true, validate: RED.validators.number()},
+            repeatUnits: {value: "minutes", required: false}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "fa-power-off.png",
+        align: "right",
+        label: function() {
+            return (this.name || "undefined");
+        }
+    });
+</script>

@@ -28,14 +28,15 @@
   ],
   "node-red": {
     "nodes": {
-      "nrl-eval in": "norelite.js",
-      "nrl-source out": "norelite.js",
-      "nrl-switch out": "norelite.js",
-      "nrl-dayslimit in": "nrl-util.js",
+      "nrl-config": "nrl-config.js",
+      "nrl-eval in": "nrl-eval.js",
+      "nrl-source out": "nrl-source.js",
+      "nrl-switch out": "nrl-switch.js",
+      "nrl-dayslimit in": "nrl-dayslimit.js",
       "nrl-rfxcom-out": "nrl-rfxcom.js",
       "nrl-tellstick-out": "nrl-tellstick.js",
-      "nrl-timelimit in": "nrl-util.js",
-      "nrl-value in": "nrl-util.js"
+      "nrl-timelimit in": "nrl-timelimit.js",
+      "nrl-value in": "nrl-value.js"
     }
   }
 }
