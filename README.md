@@ -3,11 +3,19 @@ norelite
 A set of [Node-Red](http://nodered.org/) nodes to ease the implementation of your home automation requirements.
 ![Overview example image](https://cloud.githubusercontent.com/assets/2181965/11427421/05e089e8-9463-11e5-932f-1d8b9413bfaa.jpg)
 
+Why is norelite needed?
+-----------------------
+Norelite was developed to simplify the design of Node-Red flows to manage RF-controlled switches. What Norelite contributes to in comparison to using "regular" nodes is that it:
+
+ - Keeps the history in `nrl-switch` node of all received messages. E.g. there might be many rules that decides if a switch should be on or off and the node manages on/off or dim setting based on messages received from all the parent nodes without having to re-send an instruction (a new event)
+ - Using simple rules that are triggered by sources (e.g. is lamp on/off, temperature change, is the TV on) that have been updated. The rules are being re-assessed whenever there has been an update (and every minute). This makes it really simple to define complex rules or an inheritance of rules that decides if a switch should be on/off/dimmed.
+ - 
+
 Install
 -------
 Use npm to install norelite in the Node-RED data directory.
 
-    cd $HOME/.node-red
+    cd ~/.node-red
     npm install norelite
 
 Get started
@@ -23,14 +31,14 @@ Get started
 Usage
 -----
 ### nrl-source node
-The source node is used to session store variables to be used in the `nrl-eval` node for assessment. When a new input is received it will alert the `nrl-eval` nodes that are using the data for evaluation
+The source node is used to session store variables to be used in the `nrl-eval` node for assessment. When a new input is received it will alert the `nrl-eval` nodes that are using the data for evaluation in the rules.
 
 ### nrl-eval node
 The evaluation node is used to evaluate a set of source nodes and if one or all (option) evaluations are true it will become active. An evaluation node can also have an input. It should however not be connected to more that one (1) parent node - if that is required, it is necessary to put an `nrl-switch` node before the child evaluation node.
 The node is heavily based on the rules management in the core "switch node" that comes by default with Node-Red.
 
 ### nrl-dayslimit node
-The dayslimit node is used to activate or inactivate a flow based on the day of the week.
+The dayslimit node is used to activate or inactivate a flow based on the current day of the week.
 
 ### nrl-timelimit node
 The timelimit node is used to activate or inactivate a flow based on the current time
@@ -45,11 +53,13 @@ The switch node can take **multiple inputs** and store the received messages for
  - if any message received from a parent node has a higher "value" (dim) it will be the active message
  - if any message received from a parent node has a type="scenario" that has precedence over type="rule" and type="direct" has precedence over type="scenario"
 
+**NOTE: This is the only node that can take multiple inputs**. The node can, by an identifier in the incoming message, distinguish from where the incoming node was sent and stores all received messages within the node to make a decision on what to output. If there is a need to merge different paths just make sure that you will use this node as the "merge node" before subsequent nodes (see the example of the "Alarm is off/home" in the picture below that is just after the `nrl-switch` node)
+
 ### nrl-rfxcom node
 The rfxcom node is a node to be used with [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom). It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) who will send the instructions to the connected hardware.
 
 ### nrl-tellstick node
-**NOTE: Not tested with an hardware device**
+**NOTE: Not yet tested with a hardware device**
 The tellstick node is a node to be used with [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) . It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) who will send the instructions to the connected hardware.
 
 Next on the to do list
