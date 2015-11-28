@@ -9,7 +9,6 @@ Norelite was developed to simplify the design of Node-Red flows to manage RF-con
 
  - Keeps the history in `nrl-switch` node of all received messages. E.g. there might be many rules that decides if a switch should be on or off and the node manages on/off or dim setting based on messages received from all the parent nodes without having to re-send an instruction (a new event)
  - Using simple rules that are triggered by sources (e.g. is lamp on/off, temperature change, is the TV on) that have been updated. The rules are being re-assessed whenever there has been an update (and every minute). This makes it really simple to define complex rules or an inheritance of rules that decides if a switch should be on/off/dimmed.
- - 
 
 Install
 -------
