@@ -201,6 +201,19 @@ module.exports = function (RED) {
             });
         }
 
+        //Clear timeouts
+        self.on("close", function(){
+            //Stop possible delay timer
+            if (self.timeouttimer){
+                clearTimeout(self.timeouttimer);
+            }
+
+            //Stop the timer to avoid a new repetitive message sent before processing
+            if (self.repeattimer){
+                clearInterval(self.repeattimer);
+            }
+        });
+
     }
     RED.nodes.registerType("nrl-eval in", NoreliteEval);
 }

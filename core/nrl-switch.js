@@ -157,7 +157,9 @@ module.exports = function (RED) {
                 /* Send the message the specified number of times */
                 if (prevActiveId == undefined || prevActiveId != self.activeId || repeatCall) {
                     /* Clear timer if it is not a repeatCall (called from timer) */
-                    clearTimeout(self.timer);
+                    if (self.timer){
+                        clearTimeout(self.timer);
+                    }
 
                     //Check if status and value has changed from prev
                     if (self.prevMsg == undefined ||
@@ -211,8 +213,16 @@ module.exports = function (RED) {
 
         /* When a node is closed */
         self.on("close", function(){
-            //Tidy up connections etc
-            clearInterval(self.timer);
+            //Clear the repeat timer
+            if (self.timer){
+                clearTimeout(self.timer);
+            }
+            //Clear the receive timeout
+            if (self.receiveTimeout){
+                clearTimeout(self.receiveTimeout);
+            }
+            //Reset holder of all incoming msgs
+            self.allIds = [];
         });
 
     }

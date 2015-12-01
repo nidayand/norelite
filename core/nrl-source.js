@@ -72,6 +72,13 @@ module.exports = function (RED) {
             }
 
         });
+
+        self.on("close", function(){
+           //Stop the timer
+            if (self.exptimer){
+                clearTimeout(self.exptimer);
+            }
+        });
     }
     RED.nodes.registerType("nrl-source out", NoreliteSource);
 }
