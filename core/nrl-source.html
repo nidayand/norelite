@@ -40,9 +40,7 @@
 
 </script>
 <script type="text/x-red" data-help-name="nrl-source out">
-    <p>A source definition node. Will store the current value of the datasource</p>
-    <p>Will store whatever is in <b>msg.payload</b> into a datasource collection in the defined MongoDB</p>
-    <p><b>Broadcast broker</b> is the MQTT server that will be used for communicating between the different Norelite nodes. When defining enter a prepend string to be used to uniquely identify Norelite messages</p>
+    <p>Will store the current value in a datasource and trigger any <b>nrl-eval</b> nodes that have rules that are using this datasource for evaluation.</p>
     <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
 </script>
 <script type="text/javascript">
@@ -58,7 +56,7 @@
     }
     RED.nodes.registerType('nrl-source out', {
         category: 'norelite-output',
-        color: "#C7E9C0",
+        color: "#E2D96E",
         defaults: {
             config: {type: "nrl-config", required: true},
             name: {value: "", required: true},
