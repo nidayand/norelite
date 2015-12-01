@@ -31,7 +31,7 @@ module.exports = function (RED) {
             if (node.dimmable) {
                 if (msg.payload.status === 1 && msg.payload.value > 0) {
                     val = "level " + (msg.payload.value / 100);
-                    common.setStatus(node, 1, "On " + msg.payload.value + "%");
+                    common.setStatus(node, 1, "Dim " + msg.payload.value + "%");
                 } else {
                     val = "Off";
                     common.setStatus(node, -1, "Off");
