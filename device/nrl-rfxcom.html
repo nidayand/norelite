@@ -6,6 +6,11 @@
         <input type="text" id="node-input-code">
     </div>
     <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-dimmable" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-dimmable" style="width: 70%;">Dimmable</label>
+    </div>
+    <div class="form-row">
         <label for="node-input-code"><i class="fa fa-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
@@ -13,6 +18,7 @@
 <script type="text/x-red" data-help-name="nrl-rfxcom-out">
     <p>The node will convert the Norelite payload into a format that is applicable for the <a href="https://www.npmjs.com/package/node-red-contrib-rfxcom">node-red-contrib-rfxcom</a> input format. Use the node just before the rfx-lights sensor from <a href="https://www.npmjs.com/package/node-red-contrib-rfxcom">node-red-contrib-rfxcom</a>.</p>
     <p>Enter the switch code in <b>code</b> field and a name for the display</p>
+    <p>Mark if the hardware device is <b>dimmable</b> or not. Note: If it is not marked dimmable and msg.payload.value > 0 it will still turn on</p>
 </script>
 <script type="text/javascript">
     RED.nodes.registerType('nrl-rfxcom-out', {
@@ -21,6 +27,7 @@
         defaults: {
             name: {value: "", required: true},
             code: {value: "", required: true},
+            dimmable: {value: false, required: true},
         },
         inputs: 1,
         outputs: 1,
