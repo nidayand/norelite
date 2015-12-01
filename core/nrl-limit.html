@@ -17,19 +17,19 @@
 <!-- First, the content of the edit dialog is defined.                       -->
 <script type="text/x-red" data-template-name="nrl-limit">
     <div id="rate-details" class="form-row">
-        <label for="node-input-rate"><i class="fa fa-clock-o"></i> <span data-i18n="delay.rate"></span></label>
+        <label for="node-input-rate"><i class="fa fa-clock-o"></i> Rate</label>
         <input type="text" id="node-input-rate" placeholder="1" style="direction:rtl; width:30px !important">
-        <label for="node-input-rateUnits"><span data-i18n="delay.msgper"></span></label>
+        <label for="node-input-rateUnits"> msg(s) per</label>
         <select id="node-input-rateUnits" style="width:140px !important">
-          <option value="second" data-i18n="delay.sec"></option>
-          <option value="minute" data-i18n="delay.min"></option>
-          <option value="hour" data-i18n="delay.hour"></option>
-          <option value="day" data-i18n="delay.day"></option>
+          <option value="second">Second</option>
+          <option value="minute">Minute</option>
+          <option value="hour" >Hour</option>
+          <option value="day">Day</option>
         </select>
     </div>
     <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="common.label.name"></span></label>
-        <input type="text" id="node-input-name" data-i18n="[placeholder]common.label.name">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name/label>
+        <input type="text" id="node-input-name" >
     </div>
 
 </script>
@@ -55,7 +55,7 @@
         icon: "timer.png",    // set the icon (held in public/icons)
         label: function() {      // sets the default label contents
               var units = this.rateUnits ? this.rateUnits.charAt(0) : "s";
-              return this.name||this._("delay.label.limit")+" "+this.rate+" msg/"+units;
+              return this.name|| "limit "+this.rate+" msg/"+units;
         },
         oneditprepare: function() {
           $( "#node-input-rate" ).spinner({min:1});
