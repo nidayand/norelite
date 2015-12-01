@@ -48,7 +48,7 @@
 
 </script>
 <script type="text/x-red" data-help-name="nrl-switch out">
-    <p>A switch node will take several inputs and based on the type and status of those messages send an instruction out to turn on or off the switch</p>
+    <p>A switch node will take <b>several inputs</b> and based on the type and status of those messages the node will assess all incoming messages based on the rules of precedence and output the right message whenever a message has received or on the set <b>repeat</b> value. The outbound message will sent <b>times</b> specified/p>
     <p>The following variables are required to <b>msg.payload</b>:
     <ul>
         <li><b>lid</b> (text) is an identifier from where the message has come. E.g. the id of the sending node</li>
@@ -58,14 +58,11 @@
     </ul>
     Example msg.payload = { lid: "abc", status: 1, value: 50, type: "scenario"} is a message for an active scenario that has a dim value of 50%
     </p>
-    <p>The node will assess all incoming messages based on the rules of precedence and output the right message whenever a message has received or on the set <b>repeat</b> value. The outbound message will sent <b>times</b> specified.
-    </p>
-    <p>The output message will only have one integer value in the output where a valid <b>value is 0 (off) to 100 (%dim value)</b></p>
 </script>
 <script type="text/javascript">
     RED.nodes.registerType('nrl-switch out', {
         category: 'norelite-output',
-        color: "#D7D7A0",
+        color: "#E2D96E",
         defaults: {
             name: {value: "", required: true},
             times: {type: "nrl-switch-config", required: true},
