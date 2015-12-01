@@ -33,11 +33,12 @@
       "nrl-eval in": "core/nrl-eval.js",
       "nrl-source out": "core/nrl-source.js",
       "nrl-switch out": "core/nrl-switch.js",
+      "nrl-limit": "core/nrl-limit.js",
       "nrl-dayslimit in": "util/nrl-dayslimit.js",
-      "nrl-rfxcom-out": "device/nrl-rfxcom.js",
-      "nrl-tellstick-out": "device/nrl-tellstick.js",
       "nrl-timelimit in": "util/nrl-timelimit.js",
-      "nrl-value in": "util/nrl-value.js"
+      "nrl-value in": "util/nrl-value.js",
+      "nrl-rfxcom-out": "device/nrl-rfxcom.js",
+      "nrl-tellstick-out": "device/nrl-tellstick.js"
     }
   }
 }
