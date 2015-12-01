@@ -39,6 +39,11 @@ module.exports = function (RED) {
                 common.setStatus(node, -1, "Off");
             }
 
+
+            //Also passing the original instruction if
+            nmsg.instruction = msg.payload;
+            nmsg.instruction.lid = node.id;
+
             node.send(nmsg);
         });
 
