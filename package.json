@@ -1,7 +1,7 @@
 {
   "name": "norelite",
   "version": "0.1.5",
-  "description": "A set of node-red nodes to build persistent home automation management",
+  "description": "A set of node-red nodes to build a persistent home automation management system",
   "author": {
     "name": "nidayand",
     "email": "pggithub@gothager.se"
@@ -22,7 +22,6 @@
     "RFXtrx433",
     "home",
     "automation",
-    "mqtt",
     "light",
     "control",
     "tellstick"
