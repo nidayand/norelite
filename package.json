@@ -34,6 +34,7 @@
       "nrl-switch out": "core/nrl-switch.js",
       "nrl-limit": "core/nrl-limit.js",
       "nrl-dayslimit in": "util/nrl-dayslimit.js",
+      "nrl-hold in": "util/nrl-hold.js",
       "nrl-timelimit in": "util/nrl-timelimit.js",
       "nrl-value in": "util/nrl-value.js",
       "nrl-rfxcom-out": "device/nrl-rfxcom.js",
