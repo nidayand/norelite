@@ -17,19 +17,25 @@ There is an read-only, live data, demonstration environment available on IBM Blu
 Install
 -------
 Use npm to install norelite in the Node-RED data directory.
-
+```bash
     cd ~/.node-red
     npm install norelite
-
+```
 Get started
 -----------
+The most simple flow that will turn off or on a device based on a rule:
+![enter image description here](https://cloud.githubusercontent.com/assets/2181965/11564088/779f23c2-99d7-11e5-89bd-eecb46a9513b.png)
 
  1. Setup a set of `nrl-source` nodes that takes some input data
  2. Define a `nrl-eval` node that will evaluate some of the `nrl-source` nodes
- 3. Take the output from the `nrl-eval` node and link it to an `nrl-switch` node
- 4. Link the `nrl-switch` node to `nlr-rfxcom` or `nlr-tellstick` and config the nodes with code or device id
- 5. Link `nlr-rfxcom` to a [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) node if you are using an rfxtrx433 transceiver or from `nlr-tellstick` to a [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) node if you have a Tellstick
- 6. Done!
+ 3. Link the `nrl-eval`to an `nrl-rfxcom` node to set the Device code and if it is dimmable
+ 4. Link the `nrl-rfxcom` to `nrl-limit` node to control the flow to the device node
+ 5. Link the `nrl-limit` node a [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) node if you are using an rfxtrx433 transceiver
+ 6. *Done!*
+ 
+(if you are a Tellstick user, use the `nrl-tellstick` instead of the `nrl-rfxcom` node and the out node from [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) )
+
+----------
 
 Usage
 -----
@@ -78,18 +84,20 @@ Next on the to do list
  - Hysteresis of source values
  - Manage a source value evaluation that needs to have been "true" for a certain amount of time 
  - Support scenario nodes
+ - ~~Hold value for a certain time if switching On->Off or Off->On~~
+ - ~~Limit load on device node and clear buffer if new instructions are received~~
 
 Custom nodes
 ------------
-All nodes except for `nrl-source` expects a certain format of `msg.payload`. If any custom node is used in between norelite nodes the payload needs to have the following structure:
-
+All nodes except for `nrl-source` expects a certain format of `msg.payload`. If any custom node is used in between norelite nodes the payload needs to have the following structure (and if it doesn't the next norelite node in the flow will not accept the message and output an warning in the log):
+```javascript
     {
     	lid: "identifier",
     	status: 0/1,
     	type: "rule/scenario/direct",
     	value: 0-100
     }
-
+```
  - lid
 	 - a unique identifier that identifies the sending node. E.g. node.id
  - status
@@ -107,8 +115,12 @@ All nodes except for `nrl-source` expects a certain format of `msg.payload`. If 
 **NOTE: Every node within an norelite flow needs to always pass the message further. If the message is not a valid one/active just set status = 0**
 
 A simple example of a custom node in an norelite flow using the `function` node:
-
+```javascript
+    var lid = "thisnodesuniqueid";
     if (msg.payload.value > 10){
-    	msg.payload.status = 0;
-    } 
+    	msg.payload = { lid: lid, status:0, value:10, type:msg.payload.type };
+    } else {
+	    msg.payload = { lid: lid, status:0, value:10, type:msg.payload.type };
+    }
     return msg;
+```
