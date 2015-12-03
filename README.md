@@ -120,7 +120,7 @@ A simple example of a custom node in an norelite flow using the `function` node:
     if (msg.payload.value > 10){
     	msg.payload = { lid: lid, status:0, value:10, type:msg.payload.type };
     } else {
-	    msg.payload = { lid: lid, status:0, value:10, type:msg.payload.type };
+	    msg.payload = { lid: lid, status:1, value:10, type:msg.payload.type };
     }
     return msg;
 ```
