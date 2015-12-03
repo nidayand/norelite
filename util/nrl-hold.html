@@ -1,0 +1,61 @@
+<!-- *********************************************
+    Value node
+     ********************************************* -->
+<script type="text/x-red" data-template-name="nrl-hold in">
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-positive" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-positive" style="width: 70%;">Hold On action</label>
+    </div>
+    <div class="form-row">
+        <label>&nbsp;</label>
+        <input type="checkbox" id="node-input-negative" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-negative" style="width: 70%;">Hold Off action</label>
+    </div>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> For</label>
+        <input type="text" id="node-input-timeout" placeholder="Time" style="direction:rtl; width:50px !important">
+        <select id="node-input-timeoutUnits" style="width:200px !important">
+          <option value="milliseconds">Milliseconds</option>
+          <option value="seconds">Seconds</option>
+          <option value="minutes">Minutes</option>
+          <option value="hours">Hours</option>
+          <option value="days">Days</option>
+        </select>
+    </div>
+</script>
+<script type="text/x-red" data-help-name="nrl-hold in">
+    <p>The <b>nrl-hold</b> node is used to hold an instruction for a certain amount of time if a change of action (On to Off or Off to On) is sent</p>
+    <p>E.g. if an On value (msg.payload.status = 1 and change in msg.payload.value = 1-100) that message can be hold even if an turn Off instruction is received (msg.payload.status = 0) and vice versa an Off value can be hold.</p>
+    <p>An example when this can be used is if you want the lights to be still on for 5 minutes even if the rule has instructed to turn off</p>
+    <p>Dim value changes will still be let through (msg.payload.value=0-100 changes)</p>
+</script>
+<script type="text/javascript">
+    /* when opening the form */
+    RED.nodes.registerType('nrl-hold in', {
+        category: 'norelite-input',
+        color: "#FFCC66",
+        defaults: {
+            negative: {value: false},
+            positive: {value: true},
+            timeout: {value: 5, required: false, validate: RED.validators.number()},
+            timeoutUnits: {value: "minutes", required: false}
+        },
+        inputs: 1,
+        outputs: 1,
+        icon: "fa-times-circle-o.png",
+        //align: "left",
+        label: function() {
+            var txt="";
+            if (this.positive || this.negative){
+                txt+="Hold";
+                txt+= (this.positive? " On":"");
+                txt+= (this.negative? ((this.positive? "/Off":" Off")) : "");
+            } else {
+                txt = "No hold";
+            }
+            return txt;
+        }
+    });
+</script>
+
