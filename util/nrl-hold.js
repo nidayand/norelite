@@ -55,7 +55,7 @@ module.exports = function (RED) {
             //Changing from positive to negative and it is to be hold
             if (self.activeMsg && self.activeMsg.payload.status === 1 && self.positive && !self.timer && msg.payload.status === 0){
                 //Start timer On to Off
-                common.setStatus(self, -1, "Holding On");
+                common.setStatus(self, 1, "Holding On");
                 self.timer = setTimeout(self.sendQueue, self.exptimeout);
 
                 //Add msg to queue
