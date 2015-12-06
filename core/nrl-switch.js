@@ -106,7 +106,7 @@ module.exports = function (RED) {
                             }
 
                             //Set the active type
-                            out_.type = cid.type;
+                            out_msg.type = cid.type;
 
                             //Always use the highest value
                             if (cid.value > out_msg.value) {
