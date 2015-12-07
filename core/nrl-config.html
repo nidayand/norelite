@@ -2,6 +2,10 @@
     configuration node
      ********************************************* -->
 <script type="text/x-red" data-template-name="nrl-config">
+    <div class="form-row" style="width:500px">
+        <p >This configuration should be used <b>globally</b> for nrl-switch and nrl-eval nodes. The node is used, not only to set some configurations, but also to communicate between the source and the evaluation nodes. I.e. if a source node is updated it will send the updated value, through this configuration, to the evaluation node and the evaluation will assess the rules.</p>
+        <p >If you have sources and rules on different tabs, make sure also to select <b>on all flows</b> in this configuration</p>
+    </div>
     <div class="form-row">
         <label for="node-config-input-delay"><i class="fa fa-clock-o"></i> Rule send delay</label>
         <input type="text" id="node-config-input-delay" style="direction:rtl; width:50px !important"> seconds
