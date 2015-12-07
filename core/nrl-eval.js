@@ -32,6 +32,7 @@ module.exports = function (RED) {
         this.repeattimer;   //Timer for resending messages
         this.timeouttimer;  //Timer for managing a delay in send (if there are many incoming messages)
         this.values = []; //Keeping all the inbound messages
+        this.outputdelay = n.outputdelay;
         var self = this;
 
 
@@ -131,7 +132,7 @@ module.exports = function (RED) {
                     if (!self.inputson){
                         self.repeattimer = setInterval(self.assessRules, 60*1000);
                     }
-                }, parseInt(self.configNode.delay)*1000);
+                }, self.outputdelay ? 0 : (parseInt(self.configNode.delay)*1000));
 
                 //Setup repeat every 1min
                 if (self.repeattimer){
