@@ -1,4 +1,4 @@
-node-red-contrib-norelite
+norelite
 =========
 A set of [Node-Red](http://nodered.org/) nodes to ease the implementation of your home automation requirements.
 ![Overview example image](https://cloud.githubusercontent.com/assets/2181965/11427421/05e089e8-9463-11e5-932f-1d8b9413bfaa.jpg)
@@ -19,7 +19,7 @@ Install
 Use npm to install norelite in the Node-RED data directory.
 ```bash
     cd ~/.node-red
-    npm install node-red-contrib-norelite
+    npm install norelite
 ```
 Get started
 -----------
