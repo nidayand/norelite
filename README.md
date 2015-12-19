@@ -19,7 +19,7 @@ Install
 Use npm to install norelite in the Node-RED data directory.
 ```bash
     cd ~/.node-red
-    npm install norelite
+    npm install node-red-contrib-norelite
 ```
 Get started
 -----------
