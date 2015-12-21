@@ -121,6 +121,14 @@ module.exports = function (RED) {
                 self.send(msg);
             }
         });
+
+        //Clear timeouts
+        self.on("close", function(){
+            //Stop possible delay timer
+            if (self.timer){
+                clearTimeout(self.timer);
+            }
+        });
     }
     RED.nodes.registerType("nrl-hold in", NoreliteDelayNode);
 }
