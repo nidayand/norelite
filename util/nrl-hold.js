@@ -1,6 +1,7 @@
 module.exports = function (RED) {
     "use strict";
     var common = require("../lib/common");
+    require("date-utils");
 
     function NoreliteDelayNode(n) {
         RED.nodes.createNode(this, n);
@@ -54,8 +55,8 @@ module.exports = function (RED) {
 
             //Changing from positive to negative and it is to be hold
             if (self.activeMsg && self.activeMsg.payload.status === 1 && self.positive && !self.timer && msg.payload.status === 0){
+                common.setStatus(self, 1, "On to "+new Date().addMilliseconds(self.exptimeout).toFormat("HH24:MI"));
                 //Start timer On to Off
-                common.setStatus(self, 1, "Holding On");
                 self.timer = setTimeout(self.sendQueue, self.exptimeout);
 
                 //Add msg to queue
@@ -86,7 +87,7 @@ module.exports = function (RED) {
             //Changing from negative to positive and it is to be hold
             if (self.activeMsg && self.activeMsg.payload.status === 0 && self.negative && !self.timer && msg.payload.status === 1){
                 //Start timer On to Off
-                common.setStatus(self, -1, "Holding Off");
+                common.setStatus(self, -1, "Off to "+new Date().addMilliseconds(self.exptimeout).toFormat("HH24:MI"));
                 self.timer = setTimeout(self.sendQueue, self.exptimeout);
 
                 //Add msg to queue
