@@ -33,6 +33,7 @@ module.exports = function (RED) {
         this.timeouttimer;  //Timer for managing a delay in send (if there are many incoming messages)
         this.values = []; //Keeping all the inbound messages
         this.outputdelay = n.outputdelay;
+        this.name = n.name;
         var self = this;
 
 
@@ -123,6 +124,9 @@ module.exports = function (RED) {
             if (!self.inputson || self.inputreceived){
                 //Set the correct id
                 msg.payload.lid = self.id;
+
+                //Set the name
+                msg.name = self.name;
 
                 //Send the message
                 self.timeouttimer = setTimeout(function(){

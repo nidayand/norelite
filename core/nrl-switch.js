@@ -151,6 +151,7 @@ module.exports = function (RED) {
             if (self.allIds.length > 0) {
                 var output = self.getOutputMsg();
                 var msg = {
+                    name: self.name,
                     payload: output
                 };
 
