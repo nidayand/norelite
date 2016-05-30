@@ -94,13 +94,13 @@ module.exports = function (RED) {
                         }
                     }//if direct
 
-                    if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
+                    else if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
                         /* If the input is active */
                         if (cid.status === 1) {
                             out_msg.status = 1;
 
                             /* Reset value if the type is changed */
-                            if (out_msg.type === "rule") {
+                            if (out_msg.type !== "scenario") {
                                 out_msg.value = cid.value;
                                 self.activeId = cid.lid;
                             }
@@ -117,7 +117,7 @@ module.exports = function (RED) {
                         }
                     }//if scenario
 
-                    if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
+                    else if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
                         /* If the input is active */
                         if (cid.status === 1) {
                             out_msg.status = 1;
@@ -133,7 +133,7 @@ module.exports = function (RED) {
                             }
                         }
                     }//if rule
-                    if (out_msg.type === "none") {
+                    else if (out_msg.type === "none") {
                         out_msg.type = "rule";
                         self.activeId = "none";
                     }
@@ -196,7 +196,7 @@ module.exports = function (RED) {
             //Validate input
             var validate = common.validatePayload(msg.payload);
             if (!validate.valid){
-                self.warn(validate.error);
+                common.warn(self, validate.error);
                 return;
             }
 
