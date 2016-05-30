@@ -53,6 +53,8 @@ module.exports = function (RED) {
                 return;
             }
 
+            msg.payload.lid = self.id;
+
             //Changing from positive to negative and it is to be hold
             if (self.activeMsg && self.activeMsg.payload.status === 1 && self.positive && !self.timer && msg.payload.status === 0){
                 common.setStatus(self, 1, "On to "+new Date().addMilliseconds(self.exptimeout).toFormat("HH24:MI"));
