@@ -60,7 +60,7 @@ module.exports = function (RED) {
                     clearTimeout(self.exptimer);
                 }
                 self.exptimer = setTimeout(function () {
-                    self.log("Input value has expired");
+                    common.log(self, "Input value has expired");
                     self.configNode.emitConfig(self.id, self.expval);
                     if (self.output){
                         self.send({

@@ -84,9 +84,9 @@ module.exports = function (RED) {
                     //Validate the rules
                     if(operators[rule.t](val,rule.v, rule.v2)){
                         numbersTrue++;
-                        self.log("Rule ("+self.name+") is TRUE: "+val+" "+rule.t+" "+rule.v);
+                        common.log(self, "Rule ("+self.name+") is TRUE: "+val+" "+rule.t+" "+rule.v);
                     } else {
-                        self.log("Rule ("+self.name+") is FALSE: "+val+" "+rule.t+" "+rule.v);
+                        common.log(self, "Rule ("+self.name+") is FALSE: "+val+" "+rule.t+" "+rule.v);
                     }
                 }
             })
@@ -173,7 +173,7 @@ module.exports = function (RED) {
                     }
                     //Store the value
                     self.valuesAdd(id, val);
-                    self.log("Source data received: "+id+" / "+val);
+                    common.log(self, "Source data received: "+id+" / "+val);
 
                     //Initialise assessment of rules
                     self.assessRules();
