@@ -40,7 +40,7 @@ module.exports = function (RED) {
         }
 
         self.on("input", function (msg) {
-            self.log("Received new msg: "+JSON.stringify(msg.payload));
+            common.log(self, "Received new msg: "+JSON.stringify(msg.payload));
 
             //Send the message to emitter then send it further
             self.configNode.emitConfig(self.id, msg.payload);
