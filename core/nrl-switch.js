@@ -94,7 +94,7 @@ module.exports = function (RED) {
                         }
                     }//if direct
 
-                    else if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
+                    if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
                         /* If the input is active */
                         if (cid.status === 1) {
                             out_msg.status = 1;
@@ -117,7 +117,7 @@ module.exports = function (RED) {
                         }
                     }//if scenario
 
-                    else if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
+                    if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
                         /* If the input is active */
                         if (cid.status === 1) {
                             out_msg.status = 1;
@@ -133,7 +133,7 @@ module.exports = function (RED) {
                             }
                         }
                     }//if rule
-                    else if (out_msg.type === "none") {
+                    if (out_msg.type === "none") {
                         out_msg.type = "rule";
                         self.activeId = "none";
                     }
