@@ -29,6 +29,8 @@ module.exports = function (RED) {
                 return;
             }
 
+            msg.payload.lid = node.id;
+
             var valid = false;
             switch (new Date().getDay()) {
             case 0:
