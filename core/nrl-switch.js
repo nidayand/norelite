@@ -73,6 +73,11 @@ module.exports = function (RED) {
                 };
 
                 _.each(self.allIds, function(cid){
+                    //Skip all that are not active
+                    if (cid.status === 0){
+                        return;
+                    }
+
                     if (cid.type === "direct"){
                         if (cid.status){
                             out_msg.status = 1;
@@ -94,7 +99,7 @@ module.exports = function (RED) {
                         }
                     }//if direct
 
-                    if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
+                    else if (cid.type === "scenario" && (out_msg.type === "rule" || out_msg.type === "none" || out_msg.type === "scenario")){
                         /* If the input is active */
                         if (cid.status === 1) {
                             out_msg.status = 1;
@@ -117,7 +122,7 @@ module.exports = function (RED) {
                         }
                     }//if scenario
 
-                    if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
+                    else if (cid.type === "rule" && (out_msg.type === "rule" || out_msg.type === "none")) {
                         /* If the input is active */
                         if (cid.status === 1) {
                             out_msg.status = 1;
@@ -133,11 +138,13 @@ module.exports = function (RED) {
                             }
                         }
                     }//if rule
-                    if (out_msg.type === "none") {
-                        out_msg.type = "rule";
-                        self.activeId = "none";
-                    }
-                });
+                });//each
+
+            //If nothing has been applied set to rule
+            if (out_msg.type === "none"){
+                out_msg.type = "rule";
+                self.activeId = "none";
+            }
 
             return out_msg;
         } //getOutputMsg
