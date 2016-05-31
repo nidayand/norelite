@@ -6,9 +6,10 @@ A set of [Node-Red](http://nodered.org/) nodes to ease the implementation of you
 Why is norelite needed?
 -----------------------
 Norelite was developed to simplify the design of Node-Red flows to manage RF-controlled switches. What Norelite contributes to in comparison to using "regular" nodes is that it:
-
- - Keeps the history in `nrl-switch` node of all received messages. E.g. there might be many rules that decides if a switch should be on or off and the node manages on/off or dim setting based on messages received from all the parent nodes without having to re-send an instruction (a new event)
- - Using simple rules that are triggered by sources (e.g. is lamp on/off, temperature change, is the TV on) that have been updated. The rules are being re-assessed whenever there has been an update (and every minute). This makes it really simple to define complex rules or an inheritance of rules that decides if a switch should be on/off/dimmed.
+* It is primarily based on rules that if true triggers an "turn on" action and if false it will trigger an "turn off" action.
+* It will keep the state (actions received) and will re-evaluate if a device should be on and off depeding on the messages received. Many rules can decide whether or not a a device should be active e.g. (1) if it is dark outside (2) if I'm at home and it is dark and passed midnight and there is movement in the house
+* **ONE flow will send ON and OFF messages**. You don't have to develop a separate flow to manage off actions and take into consideration any colliding rules
+* It is simple!
 
 Demo
 ----
@@ -23,7 +24,11 @@ Use npm to install norelite in the Node-RED data directory.
 ```
 Get started
 -----------
-The most simple flow that will turn off or on a device based on a rule:
+Video tutorial
+
+[![YouTube video](https://cloud.githubusercontent.com/assets/2181965/15688601/1521aa30-277b-11e6-8962-41457ba74e42.png)](https://www.youtube.com/watch?v=xm3Jrg72Jwg "Video Title")
+
+The most simple flow that will turn off or on a device based on a rule is shown below:
 ![enter image description here](https://cloud.githubusercontent.com/assets/2181965/11564088/779f23c2-99d7-11e5-89bd-eecb46a9513b.png)
 
  1. Setup a set of `nrl-source` nodes that takes some input data
@@ -40,7 +45,7 @@ The most simple flow that will turn off or on a device based on a rule:
 Usage
 -----
 ### nrl-source node
-The source node is used to session store variables to be used in the `nrl-eval` node for assessment. When a new input is received it will alert the `nrl-eval` nodes that are using the data for evaluation in the rules.
+The source node is used to session store variables to be used in the `nrl-eval` node for assessment in the defined rules. When a new input is received it will alert the `nrl-eval` nodes that are using the data for evaluation in the rules.
 
 ### nrl-eval node
 The evaluation node is used to evaluate a set of source nodes and if one or all (option) evaluations are true it will become active. An evaluation node can also have an input. It should however not be connected to more that one (1) parent node - if that is required, it is necessary to put an `nrl-switch` node before the child evaluation node.
@@ -56,7 +61,7 @@ The switch node can take **multiple inputs** and store the received messages for
 **NOTE: This is the only node that can take multiple inputs**. The node can, by an identifier in the incoming message, distinguish from where the incoming node was sent and stores all received messages within the node to make a decision on what to output. If there is a need to merge different paths just make sure that you will use this node as the "merge node" before subsequent nodes (see the example of the "Alarm is off/home" in the picture below that is just after the `nrl-switch` node)
 
 ### nrl-limit node
-The nrl-limit node is used to limit the load on the node and the device and is based on the core Delay node (basic logic is all from that node but only with the functionality of a delay) but with some additional functionality. It will, whenever a new message is received, validate the current buffer of messages and if the instruction differs (e.g. turn off or dim value) from what previously have been received it will remove the first messages in the queue. This is used to avoid any unnecessary on/off actions and should be placed just before the end node that will send the actions to the hardware device. Default rate limit is 30 msg/minute and can be configured.
+The nrl-limit node is used to limit the load on the transmitter node (e.g. rfxcom) of messages and if the instruction differs (e.g. turn off or dim value) from what previously have been received it will remove the first messages in the queue. This is used to avoid any unnecessary on/off actions and should be placed just before the end node that will send the actions to the hardware device. Default rate limit is 30 msg/minute and can be configured.
 
 ### nrl-dayslimit node
 The dayslimit node is used to activate or inactivate a flow based on the current day of the week.
