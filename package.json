@@ -1,6 +1,6 @@
 {
   "name": "norelite",
-  "version": "1.1.8",
+  "version": "1.1.9",
   "description": "A set of Node-Red nodes to ease the implementation of your home automation requirements",
   "author": {
     "name": "nidayand",
