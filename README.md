@@ -62,7 +62,7 @@ The switch node can take **multiple inputs** and store the received messages for
  - if any message received from a parent node has a higher "value" (dim) it will be the active message
  - if any message received from a parent node has a type="scenario" that has precedence over type="rule" and type="direct" has precedence over type="scenario"
 
-**NOTE: This is the only node that can take multiple inputs**. The node can, by an identifier in the incoming message, distinguish from where the incoming node was sent and stores all received messages within the node to make a decision on what to output. If there is a need to merge different paths just make sure that you will use this node as the "merge node" before subsequent nodes (see the example of the "Alarm is off/home" in the picture below that is just after the `nrl-switch` node)
+**NOTE: This node that can take multiple input flows** The node can, by an identifier in the incoming message, distinguish from where the incoming node was sent and stores all received messages within the node to make a decision on what to output. If there is a need to merge different paths just make sure that you will use this node as the "merge node" before subsequent nodes (see the example of the "Alarm is off/home" in the picture below that is just after the `nrl-switch` node)
 
 ![Switch](https://cloud.githubusercontent.com/assets/2181965/15706890/318e0c24-27f6-11e6-8def-5d0186efa486.png)
 
