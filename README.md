@@ -128,7 +128,7 @@ All nodes except for `nrl-source` expects a certain format of `msg.payload`. If 
  - status
 	 - 0 if the incoming message is inactive (isntruction is not active)
 	 - 1 if the incoming instruction is active
- - typemsg.payload.type
+ - type
 	 - rule = message is based on rule
 	 - scenario = message is based on a scenario setting and has precedence over a rule.
 		 - A scenario can be used for overriding rules and implement "I want turn on or off specific switches". A scenario will (eventually) be possible to be event based.
