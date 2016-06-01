@@ -47,9 +47,13 @@ Usage
 ### nrl-source node
 The source node is used to session store variables to be used in the `nrl-eval` node for assessment in the defined rules. When a new input is received it will alert the `nrl-eval` nodes that are using the data for evaluation in the rules.
 
+![Source](https://cloud.githubusercontent.com/assets/2181965/15706893/31ac4892-27f6-11e6-96d6-a1df3931aaed.png)
+
 ### nrl-eval node
 The evaluation node is used to evaluate a set of source nodes and if one or all (option) evaluations are true it will become active. An evaluation node can also have an input. It should however not be connected to more that one (1) parent node - if that is required, it is necessary to put an `nrl-switch` node before the child evaluation node.
 The node is heavily based on the rules management in the core "switch node" that comes by default with Node-Red.
+
+![Evaluation](https://cloud.githubusercontent.com/assets/2181965/15706894/31ac8c9e-27f6-11e6-899e-439d1195d1c1.png)
 
 ### nrl-switch node
 The switch node can take **multiple inputs** and store the received messages for review based on a set of rules. Whenever a new message is received from any of the parent nodes it will create a new message based on:
@@ -60,27 +64,43 @@ The switch node can take **multiple inputs** and store the received messages for
 
 **NOTE: This is the only node that can take multiple inputs**. The node can, by an identifier in the incoming message, distinguish from where the incoming node was sent and stores all received messages within the node to make a decision on what to output. If there is a need to merge different paths just make sure that you will use this node as the "merge node" before subsequent nodes (see the example of the "Alarm is off/home" in the picture below that is just after the `nrl-switch` node)
 
+![Switch](https://cloud.githubusercontent.com/assets/2181965/15706890/318e0c24-27f6-11e6-8def-5d0186efa486.png)
+
 ### nrl-limit node
 The nrl-limit node is used to limit the load on the transmitter node (e.g. rfxcom) of messages and if the instruction differs (e.g. turn off or dim value) from what previously have been received it will remove the first messages in the queue. This is used to avoid any unnecessary on/off actions and should be placed just before the end node that will send the actions to the hardware device. Default rate limit is 30 msg/minute and can be configured.
+
+![Limit](https://cloud.githubusercontent.com/assets/2181965/15706886/318d347a-27f6-11e6-9b03-4b7a409409cd.png)
 
 ### nrl-dayslimit node
 The dayslimit node is used to activate or inactivate a flow based on the current day of the week.
 
+![Days](https://cloud.githubusercontent.com/assets/2181965/15706887/318d5c2a-27f6-11e6-8295-dc9e627dae72.png)
+
 ### nrl-timelimit node
 The timelimit node is used to activate or inactivate a flow based on the current time
+
+![Time](https://cloud.githubusercontent.com/assets/2181965/15706888/318d928a-27f6-11e6-965a-b86fddc9e0c8.png)
 
 ### nrl-value node
 The value node is used to set a dim level.
 
+![Value](https://cloud.githubusercontent.com/assets/2181965/15707120/453ac356-27f7-11e6-9dbd-a334d4501335.png)
+
 ### nrl-hold node
 The nrl-hold node is used to hold an instruction for a certain amount of time if a change of action (On to Off or Off to On) is sent. E.g. if an On value (msg.payload.status = 1 and change in msg.payload.value = 1-100) that message can be hold even if an turn Off instruction is received (msg.payload.status = 0) and vice versa an Off value can be hold. An example when this can be used is if you want the lights to be still on for 5 minutes even if the rule has instructed to turn off. Dim value changes will still be let through (msg.payload.value=0-100 changes)
+
+![Hold](https://cloud.githubusercontent.com/assets/2181965/15706891/318ea602-27f6-11e6-809a-f49a3e275798.png)
 
 ### nrl-rfxcom node
 The rfxcom node is a node to be used with [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom). It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) who will send the instructions to the connected hardware.
 
+![rfxcom](https://cloud.githubusercontent.com/assets/2181965/15706889/318dca98-27f6-11e6-84ea-535b09881171.png)
+
 ### nrl-tellstick node
 **NOTE: Not yet tested with a hardware device**
 The tellstick node is a node to be used with [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) . It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) who will send the instructions to the connected hardware.
+
+![tellstick](https://cloud.githubusercontent.com/assets/2181965/15707179/9e4fbbd6-27f7-11e6-8fb8-81a9e94dda6c.png)
 
 Next on the to do list
 -----
