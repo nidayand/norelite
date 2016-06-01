@@ -85,10 +85,10 @@ The tellstick node is a node to be used with [node-red-contrib-tellstick](https:
 Next on the to do list
 -----
 
- - Improve the node documentation
+ - ~~Improve the node documentation~~
  - Hysteresis of source values
  - Manage a source value evaluation that needs to have been "true" for a certain amount of time 
- - Support scenario nodes
+ - ~~Support scenario nodes~~
  - ~~Hold value for a certain time if switching On->Off or Off->On~~
  - ~~Limit load on device node and clear buffer if new instructions are received~~
 
@@ -111,7 +111,6 @@ All nodes except for `nrl-source` expects a certain format of `msg.payload`. If 
  - type
 	 - rule = message is based on rule
 	 - scenario = message is based on a scenario setting and has precedence over a rule.
-		 - Not yet implemented
 		 - A scenario can be used for overriding rules and implement "I want turn on or off specific switches". A scenario will (eventually) be possible to be event based.
 	 - direct = message is based on a direct setting and has precedence over a scenario and rule
 		 - Can be used to turn off/on specific lights and override scenario and rules
