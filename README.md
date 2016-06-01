@@ -106,12 +106,13 @@ All nodes except for `nrl-source` expects a certain format of `msg.payload`. If 
  - lid
 	 - a unique identifier that identifies the sending node. E.g. node.id
  - status
-	 - 0 if the incoming message is inactive
+	 - 0 if the incoming message is inactive (isntruction is not active)
 	 - 1 if the incoming instruction is active
- - type
+ - typemsg.payload.type
 	 - rule = message is based on rule
 	 - scenario = message is based on a scenario setting and has precedence over a rule.
 		 - A scenario can be used for overriding rules and implement "I want turn on or off specific switches". A scenario will (eventually) be possible to be event based.
+         - If you want to override a rule with a scenario and the switch should be turned off then status = 1, type = "scenario" and value = 0
 	 - direct = message is based on a direct setting and has precedence over a scenario and rule
 		 - Can be used to turn off/on specific lights and override scenario and rules
 	 - value = 0 to 100 to be able to dim a light.
@@ -122,9 +123,9 @@ A simple example of a custom node in an norelite flow using the `function` node:
 ```javascript
     var lid = "thisnodesuniqueid";
     if (msg.payload.value > 10){
-    	msg.payload = { lid: lid, status:0, value:10, type:msg.payload.type };
+    	msg.payload = { lid: lid, status:0, value:100, type:"scenario" };
     } else {
-	    msg.payload = { lid: lid, status:1, value:10, type:msg.payload.type };
+	    msg.payload = { lid: lid, status:1, value:100, type:"scenario" };
     }
     return msg;
 ```
