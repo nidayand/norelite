@@ -38,7 +38,9 @@ The most simple flow that will turn off or on a device based on a rule is shown 
  5. Link the `nrl-limit` node a [node-red-contrib-rfxcom](https://github.com/maxwellhadley/node-red-contrib-rfxcom) node if you are using an rfxtrx433 transceiver
  6. *Done!*
  
-(if you are a Tellstick user, use the `nrl-tellstick` instead of the `nrl-rfxcom` node and the out node from [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) )
+Note: 
+- if you are a Tellstick user, use `nrl-tellstick` and the out node from [node-red-contrib-tellstick](https://www.npmjs.com/package/node-red-contrib-tellstick) 
+- if you are using Z-Wave, use `nrl-zwave` with the out node from [node-red-contrib-openzwave](https://www.npmjs.com/package/node-red-contrib-openzwave)
 
 ----------
 
@@ -98,9 +100,15 @@ The rfxcom node is a node to be used with [node-red-contrib-rfxcom](https://gith
 
 ### nrl-tellstick node
 **NOTE: Not yet tested with a hardware device**
-The tellstick node is a node to be used with [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) . It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-tellstick](https://github.com/emiloberg/node-red-contrib-tellstick) who will send the instructions to the connected hardware.
+The tellstick node is a node to be used with [node-red-contrib-tellstick](https://www.npmjs.com/package/node-red-contrib-tellstick) . It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-tellstick](https://www.npmjs.com/package/node-red-contrib-tellstick) who will send the instructions to the connected hardware.
 
 ![tellstick](https://cloud.githubusercontent.com/assets/2181965/15707179/9e4fbbd6-27f7-11e6-8fb8-81a9e94dda6c.png)
+
+### nrl-zwave node
+**NOTE: Not yet tested with a hardware device**
+The zwave node is a node to be used with [node-red-contrib-openzwave](https://www.npmjs.com/package/node-red-contrib-openzwave) . It will translate the output from a nrl-switch node into a format understood by [node-red-contrib-openzwave](https://www.npmjs.com/package/node-red-contrib-openzwave) who will send the instructions to the connected hardware.
+
+![openzwave](https://cloud.githubusercontent.com/assets/2181965/16298796/68e7a16a-3937-11e6-9364-bcbccb88513b.png)
 
 Next on the to do list
 -----

@@ -25,7 +25,9 @@
     "automation",
     "light",
     "control",
-    "tellstick"
+    "tellstick",
+    "zwave",
+    "openzwave"
   ],
   "node-red": {
     "nodes": {
@@ -39,7 +41,8 @@
       "nrl-timelimit in": "util/nrl-timelimit.js",
       "nrl-value in": "util/nrl-value.js",
       "nrl-rfxcom-out": "device/nrl-rfxcom.js",
-      "nrl-tellstick-out": "device/nrl-tellstick.js"
+      "nrl-tellstick-out": "device/nrl-tellstick.js",
+      "nrl-zwave-out": "device/nrl-zwave.js"
     }
   }
 }
