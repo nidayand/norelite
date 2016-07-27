@@ -101,6 +101,10 @@ module.exports = function (RED) {
 
             node.send(msg);
         });
+
+        node.on("close", function () {
+            common.setStatus(node);
+        });
     }
     RED.nodes.registerType("nrl-timelimit in", NoreliteTimeLimitInNode);
 }
