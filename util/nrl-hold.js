@@ -31,6 +31,9 @@ module.exports = function (RED) {
 
         self.sendQueue = function(){
             //Remove timer value
+            if (self.timer){
+                clearTimeout(self.timer);
+            }
             self.timer = undefined;
 
             //Assign holding msg as the active message
