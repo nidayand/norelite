@@ -24,7 +24,7 @@ module.exports = function (RED) {
         node.on("input", function (msg) {
             //Validate input
             var validate = common.validatePayload(msg.payload);
-            if (!validate.valid){
+            if (!validate.valid) {
                 node.warn(validate.error);
                 return;
             }
@@ -62,6 +62,11 @@ module.exports = function (RED) {
                 common.setStatus(node, msg.payload.status, "Active");
             }
             node.send(msg);
+        });
+
+
+        node.on("close", function () {
+            common.setStatus(node);
         });
     }
     RED.nodes.registerType("nrl-dayslimit in", NoreliteDaysLimitInNode);
