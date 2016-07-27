@@ -58,7 +58,7 @@ module.exports = function (RED) {
             return (found != undefined ? found.value : undefined);
         }
 
-        common.setStatus(this);
+        common.setStatus(self);
 
         //Initialise config
         self.configNode.initialise();
@@ -217,6 +217,12 @@ module.exports = function (RED) {
             if (self.repeattimer){
                 clearInterval(self.repeattimer);
             }
+
+            //Clear status
+            common.setStatus(self);
+
+            //Clear values
+            self.inputreceived = false;
         });
 
     }
