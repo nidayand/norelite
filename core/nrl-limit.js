@@ -104,8 +104,11 @@ module.exports = function (RED) {
         });
 
         this.on("close", function () {
-            clearInterval(this.intervalID);
-            this.buffer = [];
+            clearInterval(node.intervalID);
+            node.buffer = [];
+            node.idList = [];
+            node.intervalID = -1;
+            node.lastSent = null;
         });
 
     }
