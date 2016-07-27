@@ -229,8 +229,14 @@ module.exports = function (RED) {
             if (self.receiveTimeout){
                 clearTimeout(self.receiveTimeout);
             }
-            //Reset holder of all incoming msgs
+            //Reset holder of all incoming msgs and msg values
             self.allIds = [];
+            self.activeId=null;
+            self.prevMsg=null;
+
+            //Reset the status
+            common.setStatus(self);
+
         });
 
     }
