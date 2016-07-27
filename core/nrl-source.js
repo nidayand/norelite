@@ -78,6 +78,9 @@ module.exports = function (RED) {
             if (self.exptimer){
                 clearTimeout(self.exptimer);
             }
+
+            //Clear the status
+            common.setStatus(this);
         });
     }
     RED.nodes.registerType("nrl-source out", NoreliteSource);
