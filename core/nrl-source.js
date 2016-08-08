@@ -46,11 +46,11 @@ module.exports = function (RED) {
         self.on("input", function (msg) {
             common.log(self, "Received new msg: "+JSON.stringify(msg.payload));
 
-            //Check if outside hysteresis value
-            if(!isNaN(self.hysteresis) && !isNaN(msg.payload)){
+            // Check if outside hysteresis value only if it is larger than
+            if(!isNaN(self.hysteresis) && !isNaN(msg.payload) && self.hysteresis>0){
                 if(self.prevpayload !== null){
                     var diff;
-                    if (self.prevpayload>msg.payload){
+                    if (self.prevpayload > msg.payload){
                         diff = self.prevpayload - msg.payload;
                     } else {
                         diff = msg.payload - self.prevpayload;
@@ -59,6 +59,7 @@ module.exports = function (RED) {
                     //If the difference is not large enough discard the message
                     if (diff < self.hysteresis){
                         //Set the node status
+                        common.log(self, "Message value is less that hysteresis setting ("+self.hysteresis+"): "+self.prevpayload+ " ("+msg.payload+")");
                         common.setStatus(self, 0, self.prevpayload+ " ("+msg.payload+")");
 
                         return;
