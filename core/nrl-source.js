@@ -18,8 +18,12 @@ module.exports = function (RED) {
         this.expire = n.expire; //It will expire after a set time
         this.expval = n.expval; //Expire value
         this.exptimer = null; //Expire timer
+        this.hysteresis = n.hysteresis;
         var self = this;
         common.setStatus(this);
+
+        //Keep a local variable for storing the last received value for hysteresis verification
+        self.prevpayload = null;
 
         //Initialise config
         self.configNode.initialise();
@@ -42,6 +46,48 @@ module.exports = function (RED) {
         self.on("input", function (msg) {
             common.log(self, "Received new msg: "+JSON.stringify(msg.payload));
 
+            //Check if outside hysteresis value
+            if(!isNaN(self.hysteresis) && !isNaN(msg.payload)){
+                if(self.prevpayload !== null){
+                    var diff;
+                    if (self.prevpayload>msg.payload){
+                        diff = self.prevpayload - msg.payload;
+                    } else {
+                        diff = msg.payload - self.prevpayload;
+                    }
+
+                    //If the difference is not large enough discard the message
+                    if (diff < self.hysteresis){
+                        //Set the node status
+                        common.setStatus(self, 0, self.prevpayload+ " ("+msg.payload+")");
+
+                        return;
+                    } else {
+                        //Save the new value for next comparison
+                        self.prevpayload = msg.payload;
+
+                        //Set node status
+                        common.setStatus(self, 1, msg.payload);
+                    }
+
+                } else {
+                    //Store the received value
+                    self.prevpayload = msg.payload;
+
+                    //Set the status
+                    common.setStatus(self, 1, msg.payload);
+                }
+            } else {
+                //Set the status
+                common.setStatus(self, 1, msg.payload);
+
+                //Reset prev value
+                self.prevpayload = null;
+            }
+            if (isNaN(self.hysteresis)){
+                common.warn(self, "Hysteresis is not a number");
+            }
+
             //Send the message to emitter then send it further
             self.configNode.emitConfig(self.id, msg.payload);
 
@@ -49,9 +95,6 @@ module.exports = function (RED) {
             if (self.output) {
                 self.send(msg);
             }
-
-            //Set status
-            common.setStatus(self, 1, msg.payload);
 
             //Check if there is a timeout value
             if (self.expire) {
@@ -68,6 +111,9 @@ module.exports = function (RED) {
                         });
                     }
                     common.setStatus(self, 1, self.expval);
+
+                    //Reset the previous value parameter
+                    self.prevpayload = null;
                 }, self.exptimeout);
             }
 
@@ -81,6 +127,9 @@ module.exports = function (RED) {
 
             //Clear the status
             common.setStatus(this);
+
+            //Clear local variables
+            self.prevpayload = null;
         });
     }
     RED.nodes.registerType("nrl-source out", NoreliteSource);

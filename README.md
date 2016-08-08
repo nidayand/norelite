@@ -49,7 +49,7 @@ Usage
 ### nrl-source node
 The source node is used to session store variables to be used in the `nrl-eval` node for assessment in the defined rules. When a new input is received it will alert the `nrl-eval` nodes that are using the data for evaluation in the rules.
 
-![Source](https://cloud.githubusercontent.com/assets/2181965/15706893/31ac4892-27f6-11e6-96d6-a1df3931aaed.png)
+![Source](https://cloud.githubusercontent.com/assets/2181965/17483375/0d28cbc4-5d86-11e6-9961-74a995d14c67.png)
 
 ### nrl-eval node
 The evaluation node is used to evaluate a set of source nodes and if one or all (option) evaluations are true it will become active. An evaluation node can also have an input. It should however not be connected to more that one (1) parent node - if that is required, it is necessary to put an `nrl-switch` node before the child evaluation node.
@@ -114,7 +114,7 @@ Next on the to do list
 -----
 
  - ~~Improve the node documentation~~
- - Hysteresis of source values
+ - ~~Hysteresis of source values~~
  - Manage a source value evaluation that needs to have been "true" for a certain amount of time 
  - ~~Support scenario nodes~~
  - ~~Hold value for a certain time if switching On->Off or Off->On~~

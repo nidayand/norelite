@@ -34,6 +34,10 @@
         <label for="node-input-output" style="width: 70%;">Use output</label>
     </div>
     <div class="form-row">
+        <label for="node-input-hysteresis"><i class="fa fa-bookmark"></i> Hysteresis</label>
+        <input type="text" id="node-input-hysteresis" style="width:50px">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-bookmark"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
@@ -42,6 +46,7 @@
 <script type="text/x-red" data-help-name="nrl-source out">
     <p>Will store the current value in a datasource and trigger any <b>nrl-eval</b> nodes that have rules that are using this datasource for evaluation.</p>
     <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
+    <p>The <b>Hysteresis number</b> is used to avoid switching on/off if the values are closed to what has been set in the rules. E.g. 0.1 if you would require a new value to be at least 0.1 from the previous value in order to have the value changed. This is only applicable for numbers and not strings and it should be a positive number (>=0).</p>
 </script>
 <script type="text/javascript">
     function oneditprepareDatasource() {
@@ -64,7 +69,8 @@
             timeout: {value: 100, required: false, validate: RED.validators.number()},
             timeoutUnits: {value: "seconds", required: false},
             expval : {value: false, required: false},
-            output: {value:false, required:true }
+            output: {value:false, required:true },
+            hysteresis: {value:0, required:true, validate: RED.validators.number()}
         },
         inputs: 1,
         outputs: 0,
