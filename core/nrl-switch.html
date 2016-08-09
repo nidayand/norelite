@@ -48,16 +48,22 @@
 
 </script>
 <script type="text/x-red" data-help-name="nrl-switch out">
-    <p>A switch node will take <b>several inputs</b> and based on the type and status of those messages the node will assess all incoming messages based on the rules of precedence and output the right message whenever a message has received or on the set <b>repeat</b> value. The outbound message will sent <b>times</b> specified/p>
+    <p>A switch node will take <b>several inputs</b> and based on the type and status of those messages the node will assess all incoming messages based on the rules of precedence and output the right message whenever a message has received or on the set <b>repeat</b> value. The outbound message will sent <b>times</b> specified</p>
     <p>The following variables are required to <b>msg.payload</b>:
     <ul>
         <li><b>lid</b> (text) is an identifier from where the message has come. E.g. the id of the sending node</li>
         <li><b>status</b> (int) = 0 (not active) or 1 (active)</li>
         <li><b>value</b> (int) is a value from 0 - 100 where 0 = off and 1-100 is the dim value</li>
-        <li><b>type</b> (text> is "rule", "scenario" or "direct". Where "scenario" has precedence of "rule" and "direct" has precedence of "scenario"</li>
+        <li><b>type</b> (text) is "rule", "scenario" or "direct". Where "scenario" has precedence of "rule" and "direct" has precedence of "scenario"</li>
     </ul>
-    Example msg.payload = { lid: "abc", status: 1, value: 50, type: "scenario"} is a message for an active scenario that has a dim value of 50%
+    <p>Example msg.payload = { lid: "abc", status: 1, value: 50, type: "scenario"} is a message for an active scenario that has a dim value of 50%.</p>
     </p>
+    <p>The <b>output message</b> is in the format of an javascript object on <b>msg.payload</b> with the following structure: { lid : node.id, type: "rule", status : 1, value:100}. <ul>
+    <li><b>lid</b> is a sender identifier (usually the node id)</li>
+    <li><b>type</b> is from this node always "rule" but can in other nodes be "scenario" or "direct" (in the nrl-switch node messages from direct has precedence over scenario and scenario has precedence over rule)</li>
+    <li><b>status</b> is 0 or 1 depending if the rule is active or not</li>
+    <li><b>value</b> is the dim level of the switch (0-100) and will always be 100 from the rule node. Use nrl-value to modify the output</li>
+    </ul></p>
 </script>
 <script type="text/javascript">
     RED.nodes.registerType('nrl-switch out', {

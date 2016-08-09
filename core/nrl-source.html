@@ -45,8 +45,11 @@
 </script>
 <script type="text/x-red" data-help-name="nrl-source out">
     <p>Will store the current value in a datasource and trigger any <b>nrl-eval</b> nodes that have rules that are using this datasource for evaluation.</p>
-    <p>If the value should only be valid for a certain period mark the expiration flag and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
-    <p>The <b>Hysteresis number</b> is used to avoid switching on/off if the values are closed to what has been set in the rules. E.g. 0.1 if you would require a new value to be at least 0.1 from the previous value in order to have the value changed. This is only applicable for numbers and not strings and it should be a positive number (>=0).</p>
+    <p><b>Config</b> is used to set some global configuration variables. use the same configuration for all nrl-eval nodes and nrl-sources nodes that should be able to communicate (e.g. source sends new values to nrl-eval nodes for evaluation in the rules). <b>Rule delay</b> value is used for rules to wait before sending out a message as sometimes multiple sources gets updated close to eachother and this variable can avoid unnecessary output messages.</p>
+    <p>If the value should only be valid for a certain period mark the <b>expiration flag</b> and define for how long it will be valid. It is also important to define the value that should be set for the datasource when it is expired. Default is "false"</p>
+    <p>If you want to do further processing of the value in the node you can use the <b>output flag</b> to output the value into another node.</p>
+    <p>The <b>Hysteresis</b> number is used to avoid switching on/off if the values are closed to what has been set in the rules. E.g. 0.1 if you would require a new value to be at least 0.1 from the previous value in order to have the value changed. This is only applicable for numbers and not strings and it should be a positive number (>=0). If set to 0 it is disabled.</p>
+    <p><b>Name</b> is important as it will be used in the rule node (nrl-rule).</p>
 </script>
 <script type="text/javascript">
     function oneditprepareDatasource() {
@@ -69,8 +72,8 @@
             timeout: {value: 100, required: false, validate: RED.validators.number()},
             timeoutUnits: {value: "seconds", required: false},
             expval : {value: false, required: false},
-            output: {value:false, required:true },
-            hysteresis: {value:0, required:true, validate: RED.validators.number()}
+            output: {value: false, required:true },
+            hysteresis: {value: 0, required:true, validate: RED.validators.number()}
         },
         inputs: 1,
         outputs: 0,

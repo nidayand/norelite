@@ -14,6 +14,12 @@
 </script>
 <script type="text/x-red" data-help-name="nrl-timelimit in">
     <p>Is used to filter the instructions based on the time of the day. If an incoming value has payload.status = 1 the value will be changed to payload.status = 0 if the current time is out of the selected values</p>
+    <p>The <b>output message</b> is in the format of an javascript object on <b>msg.payload</b> with the following structure: { lid : node.id, type: "rule", status : 1, value:100}. <ul>
+    <li><b>lid</b> is a sender identifier (usually the node id)</li>
+    <li><b>type</b> is from this node always "rule" but can in other nodes be "scenario" or "direct" (in the nrl-switch node messages from direct has precedence over scenario and scenario has precedence over rule)</li>
+    <li><b>status</b> is 0 or 1 depending if the rule is active or not</li>
+    <li><b>value</b> is the dim level of the switch (0-100) and will always be 100 from the rule node. Use nrl-value to modify the output</li>
+    </ul></p>
 </script>
 <script type="text/javascript">
     /* when saving the form */

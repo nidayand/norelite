@@ -36,8 +36,8 @@
 
 <!-- Next, some simple help text is provided for the node.                   -->
 <script type="text/x-red" data-help-name="nrl-limit">
-    <p>The <b>nrl-limit node</b> is used to limit the load on the node and the device and is based on the core Delay node (basic logic is all from that node but only with the functionality of a delay) but with some additional functionality. It will, whenever a new message is received, validate the current buffer of messages and if the instruction differs (e.g. turn off or dim value) from what previously have been received it will remove the first messages in the queue. This is used to avoid any unnecessary on/off actions and should be placed <b>just before the end node</b> that will send the actions to the hardware device</p>
-    <p>Default rate limit of 30 msg/minute, but can be configured.</p>
+    <p>The <b>nrl-limit node</b> is used to limit the load on the end node and the hardware device (used by the end node) and is based on the core "Delay" node (basic logic is all from that node but only with the functionality of a delay) but with some additional functionality. It will, whenever a new message is received, validate the current buffer of messages and if the instruction differs (e.g. turn off or dim value) from what previously have been received it will remove the first messages in the queue. This is used to avoid any unnecessary on/off actions and should be placed <b>just before the end node</b> that will send the actions to the hardware device</p>
+    <p>Default rate limit of 30 msg/minute.</p>
 </script>
 
 <!-- Finally, the node type is registered along with all of its properties   -->
