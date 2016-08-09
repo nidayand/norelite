@@ -11,6 +11,11 @@ Norelite was developed to simplify the design of Node-Red flows to manage RF-con
 * **ONE flow will send ON and OFF messages**. You don't have to develop a separate flow to manage off actions and take into consideration any colliding rules
 * It is simple!
 
+How does it work?
+-----------------
+It is briefly explained in the picture below (even if not all types of nodes are represented). Click on the picture to get a better view...
+![Overview example image](https://cloud.githubusercontent.com/assets/2181965/17513447/57803b6a-5e2d-11e6-91a7-2a2b270c7c02.png)
+
 Demo
 ----
 There is an read-only, live data, demonstration environment available on IBM BlueMix: http://goo.gl/T6Ag9P if you want to take a look. Note that nodes are defined on two sheets.
