@@ -73,7 +73,8 @@
             timeoutUnits: {value: "seconds", required: false},
             expval : {value: false, required: false},
             output: {value: false, required:true },
-            hysteresis: {value: 0, required:true, validate: RED.validators.number()}
+            hysteresis: {value: 0, required:true, validate: RED.validators.number()},
+            outputs: {value: 0} //Storing if outputs is enabled. To be able to copy the node.
         },
         inputs: 1,
         outputs: 0,
