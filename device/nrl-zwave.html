@@ -18,6 +18,10 @@
 <script type="text/x-red" data-help-name="nrl-zwave-out">
     <p>The node will convert the Norelite payload into a format that is applicable for the <a href="https://www.npmjs.com/package/node-red-contrib-openzwave">node-red-contrib-openzwave</a> input format. Use the node just before the output node from <a href="https://www.npmjs.com/package/node-red-contrib-openzwave">node-red-contrib-openzwave</a>.</p>
     <p>Enter the switch unit device id in <b>Device Id</b> field and a name for the display</p>
+    <p>Any of the following instructions is sent depeding on what is received and if marked as a dimmable device:<br/>
+    {topic: 'switchOn', payload: {"nodeid":2}} ==> to switch on basic switch on ZWave node #2<br/>
+{topic: 'switchOff', payload: {"nodeid":2}} ==> to switch off basic switch on ZWave node #2<br/>
+{topic: 'setLevel', payload: {"nodeid": 5, "value": 50}} ==> set level on dimmer on ZWave node #5 to 50%</p>
 </script>
 <script type="text/javascript">
     RED.nodes.registerType('nrl-zwave-out', {
