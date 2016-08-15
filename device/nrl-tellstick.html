@@ -2,12 +2,13 @@
 <!-- HTML -->
 <script type="text/x-red" data-template-name="nrl-tellstick-out">
     <div class="form-row">
-        <label for="node-input-code"><i class="fa fa-bookmark"></i> Device Id</label>
-        <input type="text" id="node-input-code">
+        <label for="node-input-code"><i class="fa fa-bookmark"></i> Device</label>
+        <select id="node-input-code"/>
+        <!--<input type="text" id="node-input-code">-->
     </div>
     <div class="form-row">
         <label>&nbsp;</label>
-        <input type="checkbox" id="node-input-dimmable" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <input type="checkbox" id="node-input-dimmable" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;" disabled>
         <label for="node-input-dimmable" style="width: 70%;">Dimmable</label>
     </div>
     <div class="form-row">
@@ -17,15 +18,16 @@
 </script>
 <script type="text/x-red" data-help-name="nrl-tellstick-out">
     <p>The node will convert the Norelite payload into a format that is applicable for the <a href="https://github.com/emiloberg/node-red-contrib-tellstick">node-red-contrib-tellstick</a> input format. Use the node just before the output node from <a href="https://github.com/emiloberg/node-red-contrib-tellstick">node-red-contrib-tellstick</a>.</p>
-    <p>Enter the switch unit device id in <b>Device Id</b> field and a name for the display</p>
+    <p>Select the device that is applicable for the flow. When selecting a device the name is changed to the name of the device but can be modified. All device information is to be configured in node-red-contrib-tellstick (e.g. if it is dimmable or not).</p>
 </script>
 <script type="text/javascript">
+    var devices = null;
     RED.nodes.registerType('nrl-tellstick-out', {
         category: 'norelite_device-output',
         color: "#A6BBCF",
         defaults: {
             name: {value: "", required: true},
-            code: {value: 1, required: true, validate: RED.validators.number()},
+            code: {value: 1, required: true},
             dimmable: {value: false, required: true}
 
         },
@@ -35,6 +37,48 @@
         align: "right",
         label: function() {
             return (this.name || "undefined");
+        },
+        oneditprepare: function(){
+            var self = this;
+            //Get the tellstick devices
+            var jqXHR = $.getJSON('tellstick/device');
+
+            jqXHR.fail(function(data) {
+                RED.notify('<strong>Tellstick error (err: 13)</strong>: ' + JSON.stringify(data.responseText), 'error');
+            });
+
+            jqXHR.done(function(data) {
+                if(data.length>0){
+                    //Store devices for event management
+                    devices = data;
+
+                    //Add all options
+                    data.forEach(function(device){
+                        $('#node-input-code').append($('<option>', { value: device.id }).text(device.name));
+                    });
+                    $('#node-input-code').find('option[value="' + self.code + '"]').prop('selected', true);
+
+                    //Add events on select change
+                    $('#node-input-code').change(function(){
+                        var val = $('#node-input-code').val();
+                        //Find in device list
+                        for (var i=0; i<devices.length; i++){
+                            if (devices[i].id == val){
+                                if (devices[i].methods.dim){
+                                    self.dimmable=true;
+                                    $('#node-input-dimmable').prop('checked', true);
+                                } else {
+                                    self.dimmable=false;
+                                    $('#node-input-dimmable').prop('checked', false);
+                                }
+
+                                //Copy the name
+                                $('#node-input-name').val(devices[i].name);
+                            }
+                        }
+                    });
+                }
+            });
         }
     });
 </script>
