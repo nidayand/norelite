@@ -54,7 +54,7 @@
         oneditprepare: function(){
             var self = this;
             //Get the tellstick devices
-            var jqXHR = $.getJSON('/norelite/nrl-zwave/getzwavenodes');
+            var jqXHR = $.getJSON('norelite/nrl-zwave/getzwavenodes');
 
             jqXHR.fail(function(data) {
                 RED.notify('<strong>openzwave error (err: 13)</strong>: ' + JSON.stringify(data.responseText), 'error');
