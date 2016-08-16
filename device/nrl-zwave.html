@@ -2,35 +2,46 @@
 <!-- HTML -->
 <script type="text/x-red" data-template-name="nrl-zwave-out">
     <div class="form-row">
-        <label for="node-input-code"><i class="fa fa-bookmark"></i> Device Id</label>
-        <input type="text" id="node-input-code">
+        <label for="node-input-code"><i class="fa fa-lightbulb-o"></i> Device</label>
+        <select id="node-input-code"/>
     </div>
     <div class="form-row">
         <label>&nbsp;</label>
-        <input type="checkbox" id="node-input-dimmable" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;">
+        <input type="checkbox" id="node-input-dimmable" placeholder="Only" style="display: inline-block; width: auto; vertical-align: top;" disabled>
         <label for="node-input-dimmable" style="width: 70%;">Dimmable</label>
     </div>
     <div class="form-row">
-        <label for="node-input-code"><i class="fa fa-bookmark"></i> Name</label>
+        <label for="node-input-devicename"><i class="fa fa-bookmark"></i> Device Name</label>
+        <input type="text" id="node-input-devicename" disabled/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-devicelocation"><i class="fa fa-map-marker"></i> Device Location</label>
+        <input type="text" id="node-input-devicelocation" disabled/>
+    </div>
+    <div class="form-row">
+        <label for="node-input-code"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
 </script>
 <script type="text/x-red" data-help-name="nrl-zwave-out">
     <p>The node will convert the Norelite payload into a format that is applicable for the <a href="https://www.npmjs.com/package/node-red-contrib-openzwave">node-red-contrib-openzwave</a> input format. Use the node just before the output node from <a href="https://www.npmjs.com/package/node-red-contrib-openzwave">node-red-contrib-openzwave</a>.</p>
-    <p>Enter the switch unit device id in <b>Device Id</b> field and a name for the display</p>
-    <p>Any of the following instructions is sent depeding on what is received and if marked as a dimmable device:<br/>
+    <p>Select the device that is applicable for the flow. All device information is to be configured in node-red-contrib-openzwave and nrl-zwave retrieves the information from the openzwave node configuration.</p><p>Device Name and Information is retrieved from the device configuration as well.</p>
+    <p>Any of the following instructions is sent depending on what is received and if marked as a dimmable device:<br/>
     {topic: 'switchOn', payload: {"nodeid":2}} ==> to switch on basic switch on ZWave node #2<br/>
 {topic: 'switchOff', payload: {"nodeid":2}} ==> to switch off basic switch on ZWave node #2<br/>
 {topic: 'setLevel', payload: {"nodeid": 5, "value": 50}} ==> set level on dimmer on ZWave node #5 to 50%</p>
 </script>
 <script type="text/javascript">
+    var devices = null;
     RED.nodes.registerType('nrl-zwave-out', {
         category: 'norelite_device-output',
         color: "#A6BBCF",
         defaults: {
-            name: {value: "", required: true},
+            name: {value: "", required: false},
             code: {value: 1, required: true, validate: RED.validators.number()},
-            dimmable: {value: false, required: true}
+            dimmable: {value: false, required: true},
+            devicename: {value: ""},
+            devicelocation: {value: ""},
 
         },
         inputs: 1,
@@ -38,7 +49,82 @@
         icon: "nrlzwave.png",
         align: "right",
         label: function() {
-            return (this.name || "undefined");
+            return (this.name || this.devicename || "undefined");
+        },
+        oneditprepare: function(){
+            var self = this;
+            //Get the tellstick devices
+            var jqXHR = $.getJSON('/norelite/nrl-zwave/getzwavenodes');
+
+            jqXHR.fail(function(data) {
+                RED.notify('<strong>openzwave error (err: 13)</strong>: ' + JSON.stringify(data.responseText), 'error');
+            });
+
+            jqXHR.done(function(data) {
+                //Store the devices for event management
+                devices = data;
+
+                if(Object.keys(devices).length>0){
+                    //Add events on select change
+                    $('#node-input-code').change(function(){
+                        var val = $('#node-input-code').val();
+
+                        //Find in device list
+                        if (devices && devices[val]){
+                            //Check if it is dimmable
+                            var dim = false;
+                            Object.keys(devices[val].classes).forEach(function(k2){
+                                var v2 = parseInt(k2);
+                                //If the device supports class 38 or 39 it should be able to dim
+                                if (v2 === 38 || v2 === 39){
+                                    dim = true;
+                                }
+                            });
+                            if (dim){
+                                self.dimmable = true;
+                                $('#node-input-dimmable').prop('checked', true);
+                            } else {
+                                self.dimmable=false;
+                                 $('#node-input-dimmable').prop('checked', false);
+                            }
+
+                            //Add device information
+                            $('#node-input-devicename').val(devices[val].name);
+                            $('#node-input-devicelocation').val(devices[val].loc);
+                        }
+
+                    });
+
+                    //Add all options
+                    Object.keys(devices).forEach(function(key){
+
+                        //Check that any of command classes 37-41 is enabled. I.e. a switch that we wish to control
+                        var enabledSwitch=false;
+                        Object.keys(devices[key].classes).forEach(function(k2){
+                            if (parseInt(k2)>=37 && parseInt(k2)<=41){
+                                enabledSwitch=true;
+                            }
+                        });
+
+                        //Check the ready flag before adding the device
+                        if (enabledSwitch && devices[key].ready){
+                            $('#node-input-code').append($('<option>', { value: key }).text(devices[key].product));
+                        }
+
+                    });
+                    //Mark prev saves as selected
+                    $('#node-input-code').find('option[value="' + self.code + '"]').prop('selected', true);
+
+                    //Update device information for display
+                    $('#node-input-devicename').val(devices[self.code].name);
+                    $('#node-input-devicelocation').val(devices[self.code].loc);
+
+                } else {
+                    //Add device information
+                    $('#node-input-devicename').val();
+                    $('#node-input-devicelocation').val();
+                }
+            });
         }
     });
 </script>

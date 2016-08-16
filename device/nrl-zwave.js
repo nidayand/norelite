@@ -61,4 +61,14 @@ module.exports = function (RED) {
 
     }
     RED.nodes.registerType("nrl-zwave-out", NoreliteZwaveOutNode);
+
+    /* Create an API to retrieve the nodes information
+    According to https://github.com/OpenZWave/node-red-contrib-openzwave/blob/master/10-zwave.js it is stored in a global variable named openzwaveNodes */
+    RED.httpAdmin.get('/norelite/nrl-zwave/getzwavenodes', function(req,res){
+        if (RED.settings.functionGlobalContext.openzwaveNodes){
+            res.send(JSON.stringify(RED.settings.functionGlobalContext.openzwaveNodes));
+        } else {
+            res.send(JSON.stringify({}));
+        }
+    });
 };
