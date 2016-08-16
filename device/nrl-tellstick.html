@@ -2,7 +2,7 @@
 <!-- HTML -->
 <script type="text/x-red" data-template-name="nrl-tellstick-out">
     <div class="form-row">
-        <label for="node-input-code"><i class="fa fa-bookmark"></i> Device</label>
+        <label for="node-input-code"><i class="fa fa-lightbulb-o"></i> Device</label>
         <select id="node-input-code"/>
     </div>
     <div class="form-row">
@@ -11,7 +11,7 @@
         <label for="node-input-dimmable" style="width: 70%;">Dimmable</label>
     </div>
     <div class="form-row">
-        <label for="node-input-code"><i class="fa fa-bookmark"></i> Name</label>
+        <label for="node-input-code"><i class="fa fa-tag"></i> Name</label>
         <input type="text" id="node-input-name">
     </div>
 </script>
@@ -25,9 +25,10 @@
         category: 'norelite_device-output',
         color: "#A6BBCF",
         defaults: {
-            name: {value: "", required: true},
+            name: {value: "", required: false},
             code: {value: 1, required: true},
-            dimmable: {value: false, required: true}
+            dimmable: {value: false, required: true},
+            devicename: {value: ""}
 
         },
         inputs: 1,
@@ -35,7 +36,7 @@
         icon: "nrltellstick.png",
         align: "right",
         label: function() {
-            return (this.name || "undefined");
+            return (this.name || (this.devicename !== '' ? this.devicename : "undefined"));
         },
         oneditprepare: function(){
             var self = this;
@@ -72,7 +73,7 @@
                                 }
 
                                 //Copy the name
-                                $('#node-input-name').val(devices[i].name);
+                                self.devicename = devices[i].name;
                             }
                         }
                     });
