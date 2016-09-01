@@ -42,7 +42,8 @@
       "nrl-value in": "util/nrl-value.js",
       "nrl-rfxcom-out": "device/nrl-rfxcom.js",
       "nrl-tellstick-out": "device/nrl-tellstick.js",
-      "nrl-zwave-out": "device/nrl-zwave.js"
+      "nrl-zwave-out": "device/nrl-zwave.js",
+      "nrl-on in": "core/nrl-on.js"
     }
   }
 }
