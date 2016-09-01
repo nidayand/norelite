@@ -1,0 +1,27 @@
+<!-- *********************************************
+    evaluation node
+     ********************************************* -->
+<script type="text/x-red" data-template-name="nrl-on in">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+</script>
+<script type="text/x-red" data-help-name="nrl-on in">
+    <p>Simplest node that will send an On instruction every minute. Can be used if one is not use an evaulation on sources to start a flow.</p>
+</script>
+<script type="text/javascript">
+    RED.nodes.registerType('nrl-on in', {
+        color: "#E2D96E",
+        category: 'norelite-input',
+        defaults: {
+            name: {value:""}
+        },
+        inputs: 0,
+        outputs: 1,
+        icon: "arrow-in.png",
+        label: function() {
+            return (this.name || "On");
+        }
+    });
+</script>
