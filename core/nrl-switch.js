@@ -167,6 +167,7 @@ module.exports = function (RED) {
                     /* Clear timer if it is not a repeatCall (called from timer) */
                     if (self.timer){
                         clearTimeout(self.timer);
+                        self.timer = null;
                     }
 
                     //Check if status and value has changed from prev
@@ -214,6 +215,7 @@ module.exports = function (RED) {
             have been received. E.g. when starting for the first time */
             if (self.receiveTimeout){
                 clearTimeout(self.receiveTimeout);
+                self.receiveTimeout = null;
             }
             self.receiveTimeout = setTimeout(function(){self.sendMsg();},1000);
 
@@ -224,10 +226,12 @@ module.exports = function (RED) {
             //Clear the repeat timer
             if (self.timer){
                 clearTimeout(self.timer);
+                self.timer = null;
             }
             //Clear the receive timeout
             if (self.receiveTimeout){
                 clearTimeout(self.receiveTimeout);
+                self.receiveTimeout = null;
             }
             //Reset holder of all incoming msgs and msg values
             self.allIds = [];
